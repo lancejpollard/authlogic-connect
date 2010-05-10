@@ -1,13 +1,12 @@
 require 'rake'
 require "rake/rdoctask"
 require 'rake/gempackagetask'
-require File.join(File.expand_path(File.dirname(__FILE__)),'lib','authlogic_connect')
 
 # http://docs.rubygems.org/read/chapter/20
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
   s.author            = "Lance Pollard"
-  s.version           = AuthlogicConnect::VERSION
+  s.version           = "0.0.1"
   s.summary           = "Authlogic Connect: Let your app use all of Oauth and OpenID"
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
   s.email             = "lancejpollard@gmail.com"
@@ -27,19 +26,19 @@ end
 
 desc "Create .gemspec file (useful for github)"
 task :gemspec do
-  File.open("#{spec.name}.gemspec", "w") do |f|
+  File.open("pkg/#{spec.name}.gemspec", "w") do |f|
     f.puts spec.to_ruby
   end
 end
 
 desc "Build the gem into the current directory"
 task :gem => :gemspec do
-  `gem build #{spec.name}.gemspec`
+  `gem build pkg/#{spec.name}.gemspec`
 end
 
 desc "Publish gem to rubygems"
-task :publish => :gem do
-  `gem push #{spec.name}-#{spec.version}.gem`
+task :publish => [:package] do
+  `gem push pkg/#{spec.name}-#{spec.version}.gem`
 end
 
 desc "Print a list of the files to be put into the gem"
@@ -52,7 +51,8 @@ task :manifest => :clean do
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
-  pkg.gem_spec = spec
+  pkg.gem_spec    = spec
+  pkg.package_dir = "pkg"
 end
 
 desc "Install the gem locally"

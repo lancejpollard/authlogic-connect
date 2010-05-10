@@ -1,4 +1,7 @@
+require 'active_record'
+require 'authlogic'
 require 'oauth'
+require 'oauth2'
 
 class Hash
   def recursively_symbolize_keys!
@@ -27,7 +30,7 @@ class Array
 end
 
 module AuthlogicConnect
-  VERSION = 0.0.1
+  VERSION = "0.0.1"
   
   class << self
     

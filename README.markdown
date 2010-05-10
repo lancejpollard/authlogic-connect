@@ -37,8 +37,6 @@ Lists of all known providers here:
 
 ### 1. Install Authlogic and setup your application
 
-* <b>Authlogic:</b> [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
-
     sudo gem install authlogic
 
 ### 2. Install OAuth and Authlogic Connect
@@ -53,10 +51,6 @@ Now add the gem dependencies in your config:
     config.gem "oauth"
     config.gem "oauth2"
     config.gem "authlogic-connect"
-
-Or for older version of rails, install it as a plugin:
-
-    script/plugin install git://github.com/viatropos/authlogic_connect.git
 
 ### 3. Add the Migrations
 
