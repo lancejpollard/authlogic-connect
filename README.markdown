@@ -12,10 +12,9 @@ All of that is easier than creating a new account and password.
 
 ## Helpful links
 
-*	<b>Authlogic:</b> http://github.com/binarylogic/authlogic
-*	<b>Authlogic Connect Example Project:</b> http://github.com/viatropos/authlogic-connect-example
-*	<b>Live example with Twitter and Facebook using Rails 3:</b> http://authlogic-connect.heroku.com
-* http://github.com/bborn/communityengine/blob/master/app/models/user_session.rb
+*	<b>Authlogic:</b> [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
+*	<b>Authlogic Connect Example Project:</b> [http://github.com/viatropos/authlogic-connect-example](http://github.com/viatropos/authlogic-connect-example)
+*	<b>Live example with Twitter and Facebook using Rails 3:</b> [http://authlogic-connect.heroku.com](http://authlogic-connect.heroku.com)
 
 ## Supported Providers
 
@@ -38,64 +37,91 @@ Lists of all known providers here:
 
 ### 1. Install Authlogic and setup your application
 
-* <b>Authlogic:</b> http://github.com/binarylogic/authlogic
+* <b>Authlogic:</b> [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
 
-### 2. Install OAuth and Authlogic_Oauth
+    sudo gem install authlogic
 
-  $ sudo gem install oauth
-  $ sudo gem install authlogic-connect
+### 2. Install OAuth and Authlogic Connect
+
+    sudo gem install oauth
+    sudo gem install authlogic-connect
 
 Now add the gem dependencies in your config:
 
-  config.gem "oauth"
-  config.gem "authlogic-connect", :lib => "authlogic_connect"
-  
+    config.gem "json"
+    config.gem "authlogic"
+    config.gem "oauth"
+    config.gem "oauth2"
+    config.gem "authlogic-connect"
+
 Or for older version of rails, install it as a plugin:
 
-  $ script/plugin install git://github.com/jrallison/authlogic_connect.git
+    script/plugin install git://github.com/viatropos/authlogic_connect.git
 
 ### 3. Add the Migrations
 
 If you are starting from scratch (and you don't even have a User model yet), create these migrations.
 
-Otherwise, add this migration
+    class CreateAuthlogicConnectMigration < ActiveRecord::Migration
+      def self.up
+        add_column :users, :oauth_token, :string
+        add_column :users, :oauth_secret, :string
+        add_index :users, :oauth_token
 
-  class CreateAuthlogicConnectMigration < ActiveRecord::Migration
-    def self.up
-      add_column :users, :oauth_token, :string
-      add_column :users, :oauth_secret, :string
-      add_index :users, :oauth_token
+        change_column :users, :login, :string, :default => nil, :null => true
+        change_column :users, :crypted_password, :string, :default => nil, :null => true
+        change_column :users, :password_salt, :string, :default => nil, :null => true
+      end
 
-      change_column :users, :login, :string, :default => nil, :null => true
-      change_column :users, :crypted_password, :string, :default => nil, :null => true
-      change_column :users, :password_salt, :string, :default => nil, :null => true
-    end
+      def self.down
+        remove_column :users, :oauth_token
+        remove_column :users, :oauth_secret
 
-    def self.down
-      remove_column :users, :oauth_token
-      remove_column :users, :oauth_secret
-
-      [:login, :crypted_password, :password_salt].each do |field|
-        User.all(:conditions => "#{field} is NULL").each { |user| user.update_attribute(field, "") if user.send(field).nil? }
-        change_column :users, field, :string, :default => "", :null => false
+        [:login, :crypted_password, :password_salt].each do |field|
+          User.all(:conditions => "#{field} is NULL").each { |user| user.update_attribute(field, "") if user.send(field).nil? }
+          change_column :users, field, :string, :default => "", :null => false
+        end
       end
     end
-  end
+
+Otherwise, add this migration
+
+    class AddAuthlogicConnectMigration < ActiveRecord::Migration
+      def self.up
+        add_column :users, :oauth_token, :string
+        add_column :users, :oauth_secret, :string
+        add_index :users, :oauth_token
+
+        change_column :users, :login, :string, :default => nil, :null => true
+        change_column :users, :crypted_password, :string, :default => nil, :null => true
+        change_column :users, :password_salt, :string, :default => nil, :null => true
+      end
+
+      def self.down
+        remove_column :users, :oauth_token
+        remove_column :users, :oauth_secret
+
+        [:login, :crypted_password, :password_salt].each do |field|
+          User.all(:conditions => "#{field} is NULL").each { |user| user.update_attribute(field, "") if user.send(field).nil? }
+          change_column :users, field, :string, :default => "", :null => false
+        end
+      end
+    end
   
 ### 4. Make sure you save your objects properly
 
 Because of the redirects involved in Oauth and OpenID, you MUST pass a block to the `save` method in your UsersController and UserSessionsController:
 
-  @user_session.save do |result|
-    if result
-      flash[:notice] # "Login successful!"
-      redirect_back_or_default account_url
-    else
-      render :action => :new
+    @user_session.save do |result|
+      if result
+        flash[:notice] # "Login successful!"
+        redirect_back_or_default account_url
+      else
+        render :action => :new
+      end
     end
-  end
 
-You should save your @user objects this way as well, because you also want the user to authenticate with OAuth.
+You should save your `@user` objects this way as well, because you also want the user to authenticate with OAuth.
 
 If we don't use the block, we will get a DoubleRender error. This lets us skip that entire block and send the user along their way without any problems.
 
@@ -103,14 +129,14 @@ If we don't use the block, we will get a DoubleRender error. This lets us skip t
 
 Here's an example of the FacebookToken for Oauth
 
-  class Oauth::Token::Facebook < OauthToken
+    class FacebookToken < OauthToken
     
-  end
+    end
   
 ### 6. Add login and register buttons to your views
 
-  <%# oauth_register_button :value => "Register with Twitter" %>
-  <%# oauth_login_button :value => "Login with Twitter" %>
+    <%# oauth_register_button :value => "Register with Twitter" %>
+    <%# oauth_login_button :value => "Login with Twitter" %>
 
 That's it! The rest is taken care of for you.
 
