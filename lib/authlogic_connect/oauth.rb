@@ -1,7 +1,6 @@
 module AuthlogicConnect::Oauth
 end
 
-require File.dirname(__FILE__) + "/oauth/version"
 require File.dirname(__FILE__) + "/oauth/process"
 require File.dirname(__FILE__) + "/oauth/user"
 require File.dirname(__FILE__) + "/oauth/session"

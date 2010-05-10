@@ -1,4 +1,4 @@
-class OauthToken < AuthToken
+class OauthToken < Token
   
   # Main client for interfacing with remote service. Override this to use
   # preexisting library eg. Twitter gem.

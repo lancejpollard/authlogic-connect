@@ -16,8 +16,8 @@ spec = Gem::Specification.new do |s|
   s.platform          = Gem::Platform::RUBY
   s.files             = %w(README.markdown Rakefile init.rb MIT-LICENSE) + Dir["{lib,rails,test}/**/*"] - Dir["test/tmp"]
   s.require_path      = "lib"
-  s.add_dependency("activesupport", ">= 2.3.5")
-  s.add_dependency("activerecord", ">= 2.3.5")
+  s.add_dependency("activesupport", ">= 2.1.2")
+  s.add_dependency("activerecord", ">= 2.1.2")
   s.add_dependency("authlogic")
   s.add_dependency("oauth")
   s.add_dependency("json")

@@ -11,8 +11,8 @@ module AuthlogicConnect::Oauth
       # Set up some simple validations
       def self.included(base)
         base.class_eval do
-          has_many :tokens, :class_name => "AuthToken", :dependent => :destroy
-          belongs_to :active_token, :class_name => "AuthToken", :dependent => :destroy
+          has_many :tokens, :class_name => "Token", :dependent => :destroy
+          belongs_to :active_token, :class_name => "Token", :dependent => :destroy
           accepts_nested_attributes_for :tokens, :active_token
           
           validate :validate_by_oauth, :if => :authenticating_with_oauth?
@@ -68,7 +68,7 @@ module AuthlogicConnect::Oauth
         # Restore any attributes which were saved before redirecting to the oauth server
         self.attributes = auth_session.delete(:authlogic_oauth_attributes)
         token = AuthlogicConnect.token(oauth_provider).new(oauth_key_and_secret)
-        if AuthToken.find_by_key(token.key)
+        if Token.find_by_key(token.key)
           self.errors.add("you have already created an account using your #{oauth_token.service_name} account, so it")
         else
           self.tokens << token

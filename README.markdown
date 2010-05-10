@@ -50,33 +50,13 @@ Now add the gem dependencies in your config:
     config.gem "authlogic"
     config.gem "oauth"
     config.gem "oauth2"
-    config.gem "authlogic-connect"
+    config.gem "authlogic-connect", :lib => "authlogic_connect"
 
 ### 3. Add the Migrations
 
-If you are starting from scratch (and you don't even have a User model yet), create these migrations.
+If you are starting from scratch (and you don't even have a User model yet), create the migrations using this command.
 
-    class CreateAuthlogicConnectMigration < ActiveRecord::Migration
-      def self.up
-        add_column :users, :oauth_token, :string
-        add_column :users, :oauth_secret, :string
-        add_index :users, :oauth_token
-
-        change_column :users, :login, :string, :default => nil, :null => true
-        change_column :users, :crypted_password, :string, :default => nil, :null => true
-        change_column :users, :password_salt, :string, :default => nil, :null => true
-      end
-
-      def self.down
-        remove_column :users, :oauth_token
-        remove_column :users, :oauth_secret
-
-        [:login, :crypted_password, :password_salt].each do |field|
-          User.all(:conditions => "#{field} is NULL").each { |user| user.update_attribute(field, "") if user.send(field).nil? }
-          change_column :users, field, :string, :default => "", :null => false
-        end
-      end
-    end
+    script/generate authlogic_connect_migration
 
 Otherwise, add this migration
 
