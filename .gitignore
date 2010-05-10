@@ -6,3 +6,4 @@ doc/**/*
 *.result
 *.yml
 test/config.yml
+*.gemspec
