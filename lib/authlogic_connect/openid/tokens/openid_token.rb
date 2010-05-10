@@ -1,0 +1,3 @@
+class OpenidToken < AuthToken
+  
+end

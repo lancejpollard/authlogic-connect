@@ -1,0 +1,8 @@
+.DS_Store
+pkg/**/*
+doc/**/*
+*.tgz
+*.gem
+*.result
+*.yml
+test/config.yml
