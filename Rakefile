@@ -6,7 +6,7 @@ require 'rake/gempackagetask'
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
   s.author            = "Lance Pollard"
-  s.version           = "0.0.3"
+  s.version           = "0.0.3.2"
   s.summary           = "Authlogic Connect: Let your app use all of Oauth and OpenID"
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
   s.email             = "lancejpollard@gmail.com"
@@ -38,7 +38,7 @@ end
 
 desc "Publish gem to rubygems"
 task :publish => [:package] do
-  `gem push pkg/#{spec.name}-#{spec.version}.gem`
+  %x[gem push pkg/#{spec.name}-#{spec.version}.gem]
 end
 
 desc "Print a list of the files to be put into the gem"

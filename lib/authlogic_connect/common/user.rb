@@ -10,8 +10,12 @@ module AuthlogicConnect::Common
     
     module InstanceMethods
       
-      def connected_services
-        @connected_services ||= self.tokens.collect{|t| t.service_name.to_s}
+      def authenticated_with
+        @authenticated_with ||= self.tokens.collect{|t| t.service_name.to_s}
+      end
+
+      def authenticated_with?(service)
+        self.tokens.detect{|t| t.service_name.to_s == service.to_s}
       end
       
       # core save method coordinating how to save the user
@@ -23,11 +27,10 @@ module AuthlogicConnect::Common
           status = save_with_oauth(perform_validation, &block)
         end
         if status
-          result = super
+          result = super(:validate => true)
           yield(result) if block_given?
-          result
         end
-        status
+        result
       end
       
       def validate_password_with_oauth?

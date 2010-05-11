@@ -36,11 +36,11 @@ class Token < ActiveRecord::Base
     end
     
     def settings(site, hash = {})
-      @config = hash.merge(:site => site)
+      @settings = hash.merge(:site => site)
     end
     
-    def settings
-      @config ||= {}
+    def config
+      @settings ||= {}
     end
     
     protected
