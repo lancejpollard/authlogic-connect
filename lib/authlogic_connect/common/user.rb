@@ -10,6 +10,10 @@ module AuthlogicConnect::Common
     
     module InstanceMethods
       
+      def connected_services
+        @connected_services ||= self.tokens.collect{|t| t.service_name.to_s}
+      end
+      
       # core save method coordinating how to save the user
       def save(perform_validation = true, &block)
         status = true

@@ -1,6 +1,5 @@
 class OauthToken < Token
-  # Main client for interfacing with remote service. Override this to use
-  # preexisting library eg. Twitter gem.
+  
   def client
     unless @client
       if oauth_version == 1.0
@@ -13,14 +12,6 @@ class OauthToken < Token
     @client
   end
   
-  def consumer
-    self.class.consumer
-  end
-  
-  def simple_client
-    @simple_client ||= SimpleClient.new(OAuth::AccessToken.new(self.class.consumer, token, secret))
-  end
-  
   def oauth_version
     self.class.oauth_version
   end
@@ -31,20 +22,20 @@ class OauthToken < Token
   
   class << self
     
-    def oauth_version
-      1.0
+    def version(value)
+      @oauth_version = value
     end
     
-    def settings
-      @settings ||= {}
+    def oauth_version
+      @oauth_version ||= 1.0
     end
     
     def consumer
       unless @consumer
         if oauth_version == 1.0
-          @consumer = OAuth::Consumer.new(credentials[:key], credentials[:secret], settings.merge(credentials[:options] || {}))
+          @consumer = OAuth::Consumer.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
         else
-          @consumer = OAuth2::Client.new(credentials[:key], credentials[:secret], settings)
+          @consumer = OAuth2::Client.new(credentials[:key], credentials[:secret], config)
         end
       end
       
@@ -56,7 +47,7 @@ class OauthToken < Token
     end
     
     def get_request_token(callback_url)
-      consumer.get_request_token({:oauth_callback => callback_url}, settings)
+      consumer.get_request_token({:oauth_callback => callback_url}, config)
     end
     
     def get_access_token(oauth_verifier)

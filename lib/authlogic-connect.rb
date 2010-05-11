@@ -3,6 +3,7 @@ require 'authlogic'
 require 'oauth'
 require 'oauth2'
 
+
 # Throw callback rack app into the middleware stack
 # TODO: Somehow do this for Rails 3?
 # For now it is in the sample Rails 3 app
@@ -78,7 +79,7 @@ module AuthlogicConnect
     end
     
     def token(key)
-      throw Error unless AuthlogicConnect.include?(key) and !key.to_s.empty?
+      raise "can't find key '#{key.to_s}' in AuthlogicConnect.config" unless AuthlogicConnect.include?(key) and !key.to_s.empty?
       "#{key.to_s.camelcase}Token".constantize
     end
     

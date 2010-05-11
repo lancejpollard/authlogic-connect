@@ -28,7 +28,7 @@ module AuthlogicConnect::Oauth
       else
         auth_controller.redirect_to oauth_consumer.web_server.authorize_url(
           :redirect_uri => oauth_callback_url,
-          :scope => oauth_token.settings[:scope]
+          :scope => oauth_token.config[:scope]
         )
       end
     end

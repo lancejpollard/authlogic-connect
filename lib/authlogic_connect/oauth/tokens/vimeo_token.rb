@@ -2,12 +2,7 @@
 # http://www.vimeo.com/api/applications/new
 class VimeoToken < OauthToken
   
-  class << self
-    def settings
-      @settings ||= {
-        :site => "http://vimeo.com",
-        :authorize_url => "http://vimeo.com/oauth/authorize"
-      }
-    end
-  end
+  settings "http://vimeo.com",
+    :authorize_url => "http://vimeo.com/oauth/authorize"
+  
 end

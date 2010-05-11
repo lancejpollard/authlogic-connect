@@ -24,15 +24,10 @@
 # YouTube           http://gdata.youtube.com
 class GoogleToken < OauthToken
   
-  class << self
-    def settings
-      @settings ||= {
-        :site => "https://www.google.com", 
-        :request_token_path => "/accounts/OAuthGetRequestToken",
-        :authorize_path => "/accounts/OAuthAuthorizeToken",
-        :access_token_path => "/accounts/OAuthGetAccessToken",
-        :scope => "https://www.google.com/m8/feeds/"
-      }
-    end
-  end
+  settings "https://www.google.com", 
+    :request_token_path => "/accounts/OAuthGetRequestToken",
+    :authorize_path     => "/accounts/OAuthAuthorizeToken",
+    :access_token_path  => "/accounts/OAuthGetAccessToken",
+    :scope              => "https://www.google.com/m8/feeds/"
+  
 end

@@ -62,23 +62,11 @@ Otherwise, add this migration
 
     class AddAuthlogicConnectMigration < ActiveRecord::Migration
       def self.up
-        add_column :users, :oauth_token, :string
-        add_column :users, :oauth_secret, :string
-        add_index :users, :oauth_token
-
-        change_column :users, :login, :string, :default => nil, :null => true
-        change_column :users, :crypted_password, :string, :default => nil, :null => true
-        change_column :users, :password_salt, :string, :default => nil, :null => true
+        # TODO
       end
 
       def self.down
-        remove_column :users, :oauth_token
-        remove_column :users, :oauth_secret
-
-        [:login, :crypted_password, :password_salt].each do |field|
-          User.all(:conditions => "#{field} is NULL").each { |user| user.update_attribute(field, "") if user.send(field).nil? }
-          change_column :users, field, :string, :default => "", :null => false
-        end
+        # TODO
       end
     end
     
@@ -175,6 +163,14 @@ That's it! The rest is taken care of for you.
 ## Tests
 
 This has no tests!  I had to build this in a weekend and am not fluent with Shoulda, which I'd like to use.  One of these days when I can breathe.
+
+## Goals
+
+1. It should require the end user ONE CLICK to create an account with your site.
+2. It should not depend on Javascript
+3. It should be enhanced by Javascript
+4. You should never have to touch the User/Session model/controller/migration if you are a just looking to get up and running quickly.
+5. You should be able to plugin ruby libraries that wrap an api, such as TwitterAuth via `@user.twitter`, and LinkedIn via `@user.linked_in`.  Just because it's that easy.
 
 ## TODO
 

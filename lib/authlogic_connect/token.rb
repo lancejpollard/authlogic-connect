@@ -14,6 +14,10 @@ class Token < ActiveRecord::Base
     self.class.service_name
   end
   
+  def settings
+    self.class.settings
+  end
+  
   def get(path)
     
   end
@@ -29,6 +33,14 @@ class Token < ActiveRecord::Base
     
     def consumer
       raise "implement consumer in subclass"
+    end
+    
+    def settings(site, hash = {})
+      @config = hash.merge(:site => site)
+    end
+    
+    def settings
+      @config ||= {}
     end
     
     protected
