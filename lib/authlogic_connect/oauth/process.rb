@@ -2,7 +2,7 @@ module AuthlogicConnect::Oauth
   module Process
 
   private
-    include Variables
+    include AuthlogicConnect::Oauth::Variables
 
     def validate_by_oauth
       validate_email_field = false

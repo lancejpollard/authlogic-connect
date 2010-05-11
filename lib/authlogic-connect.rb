@@ -3,6 +3,20 @@ require 'authlogic'
 require 'oauth'
 require 'oauth2'
 
+# Throw callback rack app into the middleware stack
+# TODO: Somehow do this for Rails 3?
+# For now it is in the sample Rails 3 app
+=begin
+ActionController::Dispatcher.middleware = ActionController::MiddlewareStack.new do |m|
+  ActionController::Dispatcher.middleware.each do |klass|
+    m.use klass
+  end
+  m.use AuthlogicConnect::CallbackFilter
+end
+=end
+this = File.dirname(__FILE__)
+library = "#{this}/authlogic_connect"
+
 class Hash
   def recursively_symbolize_keys!
     self.symbolize_keys!
@@ -66,6 +80,17 @@ module AuthlogicConnect
   end
 end
 
-require File.dirname(__FILE__) + "/authlogic_connect/openid"
-require File.dirname(__FILE__) + "/authlogic_connect/oauth"
-require File.dirname(__FILE__) + "/authlogic_connect/common"
+require "#{library}/callback_filter"
+require "#{library}/token"
+require "#{library}/openid"
+require "#{library}/oauth"
+require "#{library}/common"
+
+custom_models = ["#{library}/token"]
+custom_models += Dir["#{library}/oauth/tokens"]
+custom_models +=Dir["#{library}/openid/tokens"]
+
+custom_models.each do |path|
+  $LOAD_PATH << path
+  ActiveSupport::Dependencies.load_paths << path
+end

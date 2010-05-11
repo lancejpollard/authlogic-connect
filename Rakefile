@@ -42,7 +42,7 @@ task :publish => [:package] do
 end
 
 desc "Print a list of the files to be put into the gem"
-task :manifest => :clean do
+task :manifest do
   File.open("Manifest", "w") do |f|
     spec.files.each do |file|
       f.puts file

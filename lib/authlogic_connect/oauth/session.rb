@@ -3,7 +3,6 @@ module AuthlogicConnect::Oauth
   # to the Authlogic::Session::Base class.
   module Session
     def self.included(base)
-      puts "included Oauth in Session"
       base.class_eval do
         include InstanceMethods
       end
@@ -34,8 +33,6 @@ module AuthlogicConnect::Oauth
       # Clears out the block if we are authenticating with oauth,
       # so that we can redirect without a DoubleRender error.
       def save_with_oauth(&block)
-        puts "SAVE SESSION WITH OAUTH"
-        puts "redirecting_to_oauth_server? #{redirecting_to_oauth_server?.to_s}"
         block = nil if redirecting_to_oauth_server?
         return block.nil?
       end

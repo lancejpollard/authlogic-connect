@@ -81,8 +81,40 @@ Otherwise, add this migration
         end
       end
     end
-  
-### 4. Make sure you save your objects properly
+    
+### 4. Configure your keys
+
+In `config/initializers/authlogic_connect_config.rb`, write your keys and secrets for each service you would like to support.  You have to manually go to the websites and register with the service provider (list of those links coming soon, in token classes for now).
+
+    AuthlogicConnect.config = {
+      :services => {
+        :twitter => {
+          :key => "my_key",
+          :secret => "my_secret",
+          :label => "Twitter"
+        },
+        :facebook => {
+          :key => "my_key",
+          :secret => "my_secret",
+          :label => "Facebook"
+        },
+        :google => {
+          :key => "my_key",
+          :secret => "my_secret",
+          :label => "Google"
+        },
+        :yahoo => {
+          :key => "my_key",
+          :secret => "my_secret",
+          :label => "Yahoo"
+        },
+        :vimeo => {
+      
+        }
+      }
+    }
+
+### 5. Make sure you save your objects properly
 
 Because of the redirects involved in Oauth and OpenID, you MUST pass a block to the `save` method in your UsersController and UserSessionsController:
 
@@ -99,7 +131,7 @@ You should save your `@user` objects this way as well, because you also want the
 
 If we don't use the block, we will get a DoubleRender error. This lets us skip that entire block and send the user along their way without any problems.
 
-### 5. Create Custom Tokens (if they don't already exist)
+### 6. Create Custom Tokens (if they don't already exist)
 
 Here's an example of the FacebookToken for Oauth
 
