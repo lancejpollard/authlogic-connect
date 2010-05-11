@@ -26,7 +26,7 @@ module AuthlogicConnect::Oauth
         save_auth_session(request)
         auth_controller.redirect_to request.authorize_url
       else
-        auth_controller.redirect_to oauth_client.web_server.authorize_url(
+        auth_controller.redirect_to oauth_consumer.web_server.authorize_url(
           :redirect_uri => oauth_callback_url,
           :scope => oauth_token.settings[:scope]
         )
@@ -64,7 +64,7 @@ module AuthlogicConnect::Oauth
         result = request_token.get_access_token(:oauth_verifier => auth_params[:oauth_verifier])
         result = {:key => result.token, :secret => result.secret}
       else
-        result = oauth_client.web_server.get_access_token(oauth_key, :redirect_uri => oauth_callback_url)
+        result = oauth_consumer.web_server.get_access_token(oauth_key, :redirect_uri => oauth_callback_url)
         result = {:key => result.token, :secret => oauth_key}
       end
       result
@@ -74,7 +74,7 @@ module AuthlogicConnect::Oauth
       if oauth_version == 1.0
         request_token.get_access_token(:oauth_verifier => auth_params[:oauth_verifier])
       else
-        oauth_client.web_server.get_access_token(oauth_key, :redirect_uri => oauth_callback_url)
+        oauth_consumer.web_server.get_access_token(oauth_key, :redirect_uri => oauth_callback_url)
       end
     end
     

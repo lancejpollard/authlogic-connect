@@ -1,9 +1,20 @@
 class OauthToken < Token
-  
   # Main client for interfacing with remote service. Override this to use
   # preexisting library eg. Twitter gem.
   def client
-    @client ||= OAuth::AccessToken.new(self.class.consumer, token, secret)
+    unless @client
+      if oauth_version == 1.0
+        @client = OAuth::AccessToken.new(self.consumer, self.key, self.secret)
+      else
+        @client = OAuth2::AccessToken.new(self.consumer, self.key)
+      end
+    end
+    
+    @client
+  end
+  
+  def consumer
+    self.class.consumer
   end
   
   def simple_client
@@ -12,6 +23,10 @@ class OauthToken < Token
   
   def oauth_version
     self.class.oauth_version
+  end
+  
+  def get(path, options = {})
+    client.get(path)
   end
   
   class << self
@@ -25,11 +40,15 @@ class OauthToken < Token
     end
     
     def consumer
-      @consumer ||= OAuth::Consumer.new(credentials[:key], credentials[:secret], settings.merge(credentials[:options] || {}))
-    end
-    
-    def client
-      OAuth2::Client.new(credentials[:key], credentials[:secret], settings)
+      unless @consumer
+        if oauth_version == 1.0
+          @consumer = OAuth::Consumer.new(credentials[:key], credentials[:secret], settings.merge(credentials[:options] || {}))
+        else
+          @consumer = OAuth2::Client.new(credentials[:key], credentials[:secret], settings)
+        end
+      end
+      
+      @consumer
     end
     
     def request_token(token, secret)

@@ -20,11 +20,7 @@ module AuthlogicConnect::Oauth
     end
     
     def oauth_consumer
-      AuthlogicConnect.consumer(oauth_provider)
-    end
-    
-    def oauth_client
-      oauth_token.client
+      oauth_token.consumer
     end
     
     def oauth_token

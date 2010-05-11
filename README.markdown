@@ -175,3 +175,8 @@ That's it! The rest is taken care of for you.
 ## Tests
 
 This has no tests!  I had to build this in a weekend and am not fluent with Shoulda, which I'd like to use.  One of these days when I can breathe.
+
+## TODO
+
+- Change `register_with_oauth` and related to `register_method` and `login_method`: oauth, openid, traditional
+- Build view helpers

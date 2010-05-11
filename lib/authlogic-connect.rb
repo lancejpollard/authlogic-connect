@@ -64,7 +64,15 @@ module AuthlogicConnect
     def credentials(service)
       key("services.#{service.to_s}")
     end
-
+    
+    def services
+      key("services")
+    end
+    
+    def service_names
+      key("services").keys.collect(&:to_s)
+    end
+    
     def include?(service)
       !credentials(service).nil?
     end

@@ -14,6 +14,10 @@ class Token < ActiveRecord::Base
     self.class.service_name
   end
   
+  def get(path)
+    
+  end
+  
   class << self
     def service_name
       @service_name ||= self.to_s.underscore.scan(/^(.*?)(_token)?$/)[0][0].to_sym
