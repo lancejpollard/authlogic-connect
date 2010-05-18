@@ -6,7 +6,7 @@ require 'rake/gempackagetask'
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
   s.author            = "Lance Pollard"
-  s.version           = "0.0.3.2"
+  s.version           = "0.0.3.4"
   s.summary           = "Authlogic Connect: Let your app use all of Oauth and OpenID"
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
   s.email             = "lancejpollard@gmail.com"
@@ -18,10 +18,12 @@ spec = Gem::Specification.new do |s|
   s.require_path      = "lib"
   s.add_dependency("activesupport", ">= 2.1.2")
   s.add_dependency("activerecord", ">= 2.1.2")
-  s.add_dependency("authlogic")
-  s.add_dependency("oauth")
   s.add_dependency("json")
-  s.add_dependency("oauth2") # facebook only
+  s.add_dependency("ruby-openid")
+  s.add_dependency("rack-openid", ">=0.2.1")
+  s.add_dependency("oauth")
+  s.add_dependency("oauth2")
+  s.add_dependency("authlogic")
 end
 
 desc "Create .gemspec file (useful for github)"

@@ -15,6 +15,8 @@ All of that is easier than creating a new account and password.
 *	<b>Authlogic:</b> [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
 *	<b>Authlogic Connect Example Project:</b> [http://github.com/viatropos/authlogic-connect-example](http://github.com/viatropos/authlogic-connect-example)
 *	<b>Live example with Twitter and Facebook using Rails 3:</b> [http://authlogic-connect.heroku.com](http://authlogic-connect.heroku.com)
+* <b>Rails 2.3.5 Example:</b> [http://github.com/viatropos/authlogic-connect-example-rails2](http://github.com/viatropos/authlogic-connect-example-rails2)]
+* **Rubygems Repository:** [http://rubygems.org/search?query=authlogic-connect](http://rubygems.org/search?query=authlogic-connect)
 
 ## Supported Providers
 
@@ -35,40 +37,40 @@ Lists of all known providers here:
 
 ## Install and use
 
-### 1. Install Authlogic and setup your application
+### 1. Install Authlogic Connect (it will install the dependencies)
 
-    sudo gem install authlogic
-
-### 2. Install OAuth and Authlogic Connect
-
-    sudo gem install oauth
     sudo gem install authlogic-connect
 
 Now add the gem dependencies in your config:
+
+Rails 2.3.x: `config/environment.rb`
 
     config.gem "json"
     config.gem "authlogic"
     config.gem "oauth"
     config.gem "oauth2"
-    config.gem "authlogic-connect", :lib => "authlogic_connect"
+    config.gem "authlogic-connect"
+
+Rails 3: `Gemfile`
+
+    gem "ruby-openid"
+    gem "rack-openid", ">=0.2.1", :require => "rack/openid"
+    gem "authlogic", :git => "git://github.com/odorcicd/authlogic.git", :branch => "rails3"
+    gem "oauth"
+    gem "oauth2"
+    gem "authlogic-connect"
 
 ### 3. Add the Migrations
 
-If you are starting from scratch (and you don't even have a User model yet), create the migrations using this command.
+See the [Rails 2 Example](http://github.com/viatropos/authlogic-connect-example-rails2) and [Rails 3 Example](http://github.com/viatropos/authlogic-connect-example) projects to see what you need.  Will add a generator sometime.
 
-    script/generate authlogic_connect_migration
+Files needed are:
 
-Otherwise, add this migration
-
-    class AddAuthlogicConnectMigration < ActiveRecord::Migration
-      def self.up
-        # TODO
-      end
-
-      def self.down
-        # TODO
-      end
-    end
+- models: User, UserSession
+- controllers: UsersController, UserSessionsController, ApplicationController
+- migrations: create\_users, create\_sessions, create\_tokens
+- initializers: config/authlogic.example.yml, config/initializers/authlogic_connect_config.rb
+- routes
     
 ### 4. Configure your keys
 
@@ -124,15 +126,23 @@ If we don't use the block, we will get a DoubleRender error. This lets us skip t
 Here's an example of the FacebookToken for Oauth
 
     class FacebookToken < OauthToken
-    
+
+      version 2.0 # oauth 2.0
+
+      settings "https://graph.facebook.com",
+        :authorize_url => "https://graph.facebook.com/oauth/authorize",
+        :scope         => "email, offline_access"
+
     end
+    
+If there is an Oauth/OpenID service you need, let me know, or fork/add/push and I will integrate it into the project and add you to the list.
   
-### 6. Add login and register buttons to your views
+### 7. Add login and register buttons to your views
 
     <%# oauth_register_button :value => "Register with Twitter" %>
     <%# oauth_login_button :value => "Login with Twitter" %>
 
-That's it! The rest is taken care of for you.
+Check out the example projects to see exactly what's required.  These aren't totally useful yet.  Their job is to just send the right parameters to authlogic-connect.
 
 ## The Flow
 
@@ -160,11 +170,15 @@ That's it! The rest is taken care of for you.
   - Save user
 - Finish block, render page
 
-## Tests
+### Note about the redirect process
 
-This has no tests!  I had to build this in a weekend and am not fluent with Shoulda, which I'd like to use.  One of these days when I can breathe.
+When you make a request to one of these services, it responds with a GET request.  But assuming we have made the request through a `create` method (`UsersController#create` for `/register`, `UserSessionsController#create` for `/login`), we want that GET to be a POST.
 
-## Goals
+This is accomplished by adding a property called `auth_callback_method` to the session when the original request is made.  It says "POST", or whatever the translation is from the controller method that was called.
+
+Then a Rack Middleware filter converts the GET return request from the authentication service into POST.  This forces it to run back through the `create` method.  Check out [`AuthlogicConnect::CallbackFilter`](http://github.com/viatropos/authlogic-connect/blob/master/lib/authlogic_connect/callback_filter.rb) for details.  Or search "Rack Middleware".
+
+## Project Goals
 
 1. It should require the end user ONE CLICK to create an account with your site.
 2. It should not depend on Javascript
@@ -172,7 +186,30 @@ This has no tests!  I had to build this in a weekend and am not fluent with Shou
 4. You should never have to touch the User/Session model/controller/migration if you are a just looking to get up and running quickly.
 5. You should be able to plugin ruby libraries that wrap an api, such as TwitterAuth via `@user.twitter`, and LinkedIn via `@user.linked_in`.  Just because it's that easy.
 
+### Tests
+
+This has no tests!  I had to build this in a day and am not fluent with Shoulda, which I'd like to use.  It should have lots of tests to make sure all permutations of login and account association work perfectly.
+
+Goal:
+
+- Test Framework: [Shoulda](http://github.com/thoughtbot/shoulda)
+- Autotest with Shoulda
+- Testing style like [Paperclip Tests](http://github.com/thoughtbot/paperclip/tree/master/test/)
+- Rails 2.3+ and Rails 3 Compatability
+
+I have no idea how to get up and running with Autotest and Shoulda right now.  If you know, I'd love to get the answer on Stack Overflow:
+
+[http://stackoverflow.com/questions/2823224/what-test-environment-setup-do-committers-use-in-the-ruby-community](http://stackoverflow.com/questions/2823224/what-test-environment-setup-do-committers-use-in-the-ruby-community)
+
 ## TODO
 
 - Change `register_with_oauth` and related to `register_method` and `login_method`: oauth, openid, traditional
 - Build view helpers
+
+## Helpful References for Rails 3
+
+- [Rails 3 Initialization Process](http://ryanbigg.com/guides/initialization.html)
+- [Rails 3 Plugins - Part 1, Big Picture](http://www.themodestrubyist.com/2010/03/01/rails-3-plugins---part-1---the-big-picture/)
+- [Rails 3 Plugins - Part 2, Writing an Engine](http://www.themodestrubyist.com/2010/03/05/rails-3-plugins---part-2---writing-an-engine/)
+- [Rails 3 Plugins - Part 3, Initializers](http://www.themodestrubyist.com/2010/03/16/rails-3-plugins---part-3---rake-tasks-generators-initializers-oh-my/)
+- [Using Gemspecs as Intended](http://yehudakatz.com/2010/04/02/using-gemspecs-as-intended/)

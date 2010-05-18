@@ -34,13 +34,14 @@ module AuthlogicConnect::Oauth
     end
     
     def save_oauth_callback
+      puts "save_oauth_callback"
       # Store the class which is redirecting, so we can ensure other classes
       # don't get confused and attempt to use the response
       auth_session[:oauth_request_class]        = self.class.name
       auth_session[:oauth_provider]             = auth_params[:oauth_provider]
 
       # Tell our rack callback filter what method the current request is using
-      auth_session[:oauth_callback_method]      = auth_controller.request.method
+      auth_session[:auth_callback_method]      = auth_controller.request.method
     end
     
     def save_auth_session(request)

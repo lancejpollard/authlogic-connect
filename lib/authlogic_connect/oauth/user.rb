@@ -59,16 +59,20 @@ module AuthlogicConnect::Oauth
       def authenticating_with_oauth?
         return false unless oauth_provider
         # Initial request when user presses one of the button helpers
-        (auth_params && !auth_params[:register_with_oauth].blank?) ||
+        initial_request = (auth_params && !auth_params[:register_with_oauth].blank?)
         # When the oauth provider responds and we made the initial request
-        (oauth_response && auth_session && auth_session[:oauth_request_class] == self.class.name)
+        initial_response = (oauth_response && auth_session && auth_session[:oauth_request_class] == self.class.name)
+        
+        return initial_request || initial_response
       end
 
       def authenticate_with_oauth
         # Restore any attributes which were saved before redirecting to the oauth server
         self.attributes = auth_session.delete(:authlogic_oauth_attributes)
         token = AuthlogicConnect.token(oauth_provider).new(oauth_key_and_secret)
-        if Token.find_by_key(token.key)
+        puts "NEW TOKEN: #{token.inspect}"
+        if old_token = Token.find_by_key(token.key)
+          puts "OLD TOKEN? #{old_token.inspect}"
           self.errors.add("you have already created an account using your #{oauth_token.service_name} account, so it")
         else
           self.tokens << token

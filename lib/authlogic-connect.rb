@@ -1,20 +1,9 @@
 require 'active_record'
+require "rubygems"
 require 'authlogic'
 require 'oauth'
 require 'oauth2'
 
-
-# Throw callback rack app into the middleware stack
-# TODO: Somehow do this for Rails 3?
-# For now it is in the sample Rails 3 app
-=begin
-ActionController::Dispatcher.middleware = ActionController::MiddlewareStack.new do |m|
-  ActionController::Dispatcher.middleware.each do |klass|
-    m.use klass
-  end
-  m.use AuthlogicConnect::CallbackFilter
-end
-=end
 this = File.dirname(__FILE__)
 library = "#{this}/authlogic_connect"
 
@@ -45,17 +34,17 @@ class Array
 end
 
 module AuthlogicConnect
-  VERSION = "0.0.1"
+  KEY = "connect"
   
   class << self
     
     attr_accessor :config
-
+    
     def config=(value)
       value.recursively_symbolize_keys!
       @config = value
     end
-
+    
     def key(path)
       result = self.config
       path.to_s.split(".").each { |node| result = result[node.to_sym] if result }
@@ -63,15 +52,15 @@ module AuthlogicConnect
     end
     
     def credentials(service)
-      key("services.#{service.to_s}")
+      key("#{KEY}.#{service.to_s}")
     end
     
     def services
-      key("services")
+      key(KEY)
     end
     
     def service_names
-      key("services").keys.collect(&:to_s)
+      services.keys.collect(&:to_s)
     end
     
     def include?(service)
@@ -89,15 +78,17 @@ module AuthlogicConnect
   end
 end
 
+require "#{this}/open_id_authentication"
 require "#{library}/callback_filter"
 require "#{library}/token"
 require "#{library}/openid"
 require "#{library}/oauth"
 require "#{library}/common"
+require "#{library}/engine" if defined?(Rails) && Rails::VERSION::MAJOR == 3
 
-custom_models = ["#{library}/token"]
-custom_models += Dir["#{library}/oauth/tokens"]
-custom_models +=Dir["#{library}/openid/tokens"]
+custom_models =   ["#{library}/token"]
+custom_models +=  Dir["#{library}/oauth/tokens"]
+custom_models +=  Dir["#{library}/openid/tokens"]
 
 custom_models.each do |path|
   $LOAD_PATH << path

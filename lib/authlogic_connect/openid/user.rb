@@ -23,15 +23,14 @@ module AuthlogicConnect::Openid
       end
       
       def openid_identifier=(value)
-        write_attribute(:openid_identifier, value.blank? ? nil : OpenIdAuthentication.normalize_identifier(value))
+        write_attribute(:openid_identifier, value.blank? ? nil : value.to_s.normalize_identifier)
         reset_persistence_token if openid_identifier_changed?
-      rescue OpenIdAuthentication::InvalidOpenId => e
+      rescue Exception => e
         @openid_error = e.message
       end
       
       def save_with_openid(perform_validation = true, &block)
         return false if perform_validation && block_given? && authenticating_with_openid? && !authenticating_with_openid
-        return false if new_record? && !openid_complete?
         return true
       end
       
@@ -42,15 +41,15 @@ module AuthlogicConnect::Openid
         end
         
         def using_openid?
-          respond_to?(:openid_identifier) && !openid_identifier.blank?
+          respond_to?(:openid_identifier) && !auth_params[:openid_identifier].blank?
         end
         
         def openid_complete?
-          auth_params[:open_id_complete] && auth_params[:for_model]
+          auth_session[:openid_attributes]
         end
         
         def authenticating_with_openid?
-          session_class.activated? && ((using_openid? && openid_identifier_changed?) || openid_complete?)
+          session_class.activated? && ((using_openid?) || openid_complete?)
         end
         
         def validate_password_with_openid?
@@ -60,15 +59,15 @@ module AuthlogicConnect::Openid
         def authenticating_with_openid
           @openid_error = nil
           if !openid_complete?
-            auth_session[:openid_attributes] = attributes_to_save
+            # Tell our rack callback filter what method the current request is using
+            auth_session[:auth_callback_method]   = auth_controller.request.method
+            auth_session[:openid_attributes]      = attributes_to_save
           else
-            self.attributes = auth_session[:openid_attributes]
-            auth_session[:openid_attributes] = nil
+            self.attributes                       = auth_session.delete(:openid_attributes)
           end
           
           options = {}
-          options[:return_to] = auth_controller.url_for(:for_model => "1",:controller => "users", :action => "create")
-          
+          options[:return_to] = auth_controller.url_for(:for_model => "1", :controller => "users", :action => "create")
           auth_controller.send(:authenticate_with_open_id, openid_identifier, options) do |result, openid_identifier, registration|
             if result.unsuccessful?
               @openid_error = result.message
