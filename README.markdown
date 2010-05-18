@@ -16,7 +16,7 @@ All of that is easier than creating a new account and password.
 *	<b>Authlogic Connect Example Project:</b> [http://github.com/viatropos/authlogic-connect-example](http://github.com/viatropos/authlogic-connect-example)
 *	<b>Live example with Twitter and Facebook using Rails 3:</b> [http://authlogic-connect.heroku.com](http://authlogic-connect.heroku.com)
 * <b>Rails 2.3.5 Example:</b> [http://github.com/viatropos/authlogic-connect-example-rails2](http://github.com/viatropos/authlogic-connect-example-rails2)
-* **Rubygems Repository:** [http://rubygems.org/gems/authlogic-connect](http://rubygems.org/search?query=authlogic-connect)
+* **Rubygems Repository:** [http://rubygems.org/gems/authlogic-connect](http://rubygems.org/gems/authlogic-connect)
 
 ## Supported Providers
 
