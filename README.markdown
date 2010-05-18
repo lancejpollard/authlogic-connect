@@ -15,15 +15,10 @@ All of that is easier than creating a new account and password.
 *	<b>Authlogic:</b> [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
 *	<b>Authlogic Connect Example Project:</b> [http://github.com/viatropos/authlogic-connect-example](http://github.com/viatropos/authlogic-connect-example)
 *	<b>Live example with Twitter and Facebook using Rails 3:</b> [http://authlogic-connect.heroku.com](http://authlogic-connect.heroku.com)
-* <b>Rails 2.3.5 Example:</b> [http://github.com/viatropos/authlogic-connect-example-rails2](http://github.com/viatropos/authlogic-connect-example-rails2)]
-* **Rubygems Repository:** [http://rubygems.org/search?query=authlogic-connect](http://rubygems.org/search?query=authlogic-connect)
+* <b>Rails 2.3.5 Example:</b> [http://github.com/viatropos/authlogic-connect-example-rails2](http://github.com/viatropos/authlogic-connect-example-rails2)
+* **Rubygems Repository:** [http://rubygems.org/gems/authlogic-connect](http://rubygems.org/search?query=authlogic-connect)
 
 ## Supported Providers
-
-Lists of all known providers here:
-
-- [Oauth Providers](http://wiki.oauth.net/ServiceProviders)
-- [OpenID Providers](http://en.wikipedia.org/wiki/List_of_OpenID_providers)
 
 ### Oauth
 
@@ -35,13 +30,18 @@ Lists of all known providers here:
 
 - MyOpenID
 
+Lists of all known providers here:
+
+- [Oauth Providers](http://wiki.oauth.net/ServiceProviders)
+- [OpenID Providers](http://en.wikipedia.org/wiki/List_of_OpenID_providers)
+
 ## Install and use
 
-### 1. Install Authlogic Connect (it will install the dependencies)
+### 1. Install Authlogic Connect
 
     sudo gem install authlogic-connect
 
-Now add the gem dependencies in your config:
+### 2. Add the gem dependencies in your config:
 
 Rails 2.3.x: `config/environment.rb`
 
@@ -136,6 +136,10 @@ Here's an example of the FacebookToken for Oauth
     end
     
 If there is an Oauth/OpenID service you need, let me know, or fork/add/push and I will integrate it into the project and add you to the list.
+
+Currently Implemented (some fully, some partially):
+
+- [Oauth Tokens](http://github.com/viatropos/authlogic-connect/tree/master/lib/authlogic_connect/oauth/tokens/)
   
 ### 7. Add login and register buttons to your views
 
