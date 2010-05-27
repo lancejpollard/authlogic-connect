@@ -37,7 +37,7 @@ Rails 3: `Gemfile`
     
 ### 2b.  Add the `OpenIdAuthentication.store`
 
-Do to "some strange problem":http://github.com/openid/ruby-openid/issues#issue/1 I have yet to really understand, Rails 2.3.5 doesn't like when `OpenIdAuthentication.store` is null, which means it uses the "in memory" store and for some reason fails.
+Do to [some strange problem](http://github.com/openid/ruby-openid/issues#issue/1) I have yet to really understand, Rails 2.3.5 doesn't like when `OpenIdAuthentication.store` is null, which means it uses the "in memory" store and for some reason fails.
 
 So as a fix, add these at the end of your `config/environment.rb` files:
 
