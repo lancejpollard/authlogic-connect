@@ -40,6 +40,7 @@ class Token < ActiveRecord::Base
     
     def config
       @settings ||= {}
+      @settings.dup
     end
     
     protected

@@ -87,6 +87,9 @@ class OauthToken < Token
           else
             result[:key] = access.params[self.oauth_key] || access.params[self.oauth_key.to_s] # try both
           end
+        else
+          puts "Access Token: #{access.inspect}"
+          raise "please set an oauth key for #{service_name.to_s}"
         end
       else
         access = consumer.web_server.get_access_token(secret, :redirect_uri => redirect_uri)
@@ -103,7 +106,9 @@ class OauthToken < Token
         yield request if block_given?
         return request.authorize_url
       else
-        return consumer.web_server.authorize_url(:redirect_uri => callback_url, :scope => self.config[:scope])
+        options = {:redirect_uri => callback_url}
+        options[:scope] = self.config[:scope] unless self.config[:scope].blank?
+        return consumer.web_server.authorize_url(options)
       end
     end
     
@@ -111,8 +116,10 @@ class OauthToken < Token
       OAuth::RequestToken.new(consumer, token, secret)
     end
     
+    # if you pass a hash as the second parameter to consumer.get_request_token,
+    # ruby oauth will think this is a form and all sorts of bad things happen
     def get_request_token(callback_url)
-      consumer.get_request_token({:oauth_callback => callback_url}, config)
+      consumer.get_request_token(:oauth_callback => callback_url)
     end
     
     def get_access_token(oauth_verifier)
