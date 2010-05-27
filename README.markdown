@@ -87,32 +87,32 @@ Files needed are:
 
 In `config/authlogic.yml`, write your keys and secrets for each service you would like to support.  You have to manually go to the websites and register with the service provider (list of those links coming soon, in token classes for now).
 
-connect:
-  twitter:
-    key: "my_key"
-    secret: "my_secret"
-    label: "Twitter"
-  facebook:
-    key: "my_key"
-    secret: "my_secret"
-    label: "Facebook"
-  google:
-    key: "my_key"
-    secret: "my_secret"
-    label: "Google"
-  yahoo:
-    key: "my_key"
-    secret: "my_secret"
-    label: "Yahoo"
-  myspace:
-    key: "my_key"
-    secret: "my_secret"
-  vimeo:
-    key: "my_key"
-    secret: "my_secret"
-  linked_in:
-    key: "my_key"
-    secret: "my_secret"
+    connect:
+      twitter:
+        key: "my_key"
+        secret: "my_secret"
+        label: "Twitter"
+      facebook:
+        key: "my_key"
+        secret: "my_secret"
+        label: "Facebook"
+      google:
+        key: "my_key"
+        secret: "my_secret"
+        label: "Google"
+      yahoo:
+        key: "my_key"
+        secret: "my_secret"
+        label: "Yahoo"
+      myspace:
+        key: "my_key"
+        secret: "my_secret"
+      vimeo:
+        key: "my_key"
+        secret: "my_secret"
+      linked_in:
+        key: "my_key"
+        secret: "my_secret"
 
 These are then loaded via the initializer script in `config/initializers/authlogic_connect_config.rb`:
 
@@ -225,14 +225,14 @@ If they've associated their Facebook account with your site, you can access Face
 
 ## Helpful links
 
-    *	**Authlogic:** [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
-    *	**AuthlogicConnect Example Project:** [http://github.com/viatropos/authlogic-connect-example](http://github.com/viatropos/authlogic-connect-example)
-    *	**Live example with Twitter and Facebook using Rails 3:** [http://authlogic-connect.heroku.com](http://authlogic-connect.heroku.com)
-    * **Rails 2.3.5 Example:** [http://github.com/viatropos/authlogic-connect-example-rails2](http://github.com/viatropos/authlogic-connect-example-rails2)
-    * **Rubygems Repository:** [http://rubygems.org/gems/authlogic-connect](http://rubygems.org/gems/authlogic-connect)
+*	**Authlogic:** [http://github.com/binarylogic/authlogic](http://github.com/binarylogic/authlogic)
+*	**AuthlogicConnect Example Project:** [http://github.com/viatropos/authlogic-connect-example](http://github.com/viatropos/authlogic-connect-example)
+*	**Live example with Twitter and Facebook using Rails 3:** [http://authlogic-connect.heroku.com](http://authlogic-connect.heroku.com)
+* **Rails 2.3.5 Example:** [http://github.com/viatropos/authlogic-connect-example-rails2](http://github.com/viatropos/authlogic-connect-example-rails2)
+* **Rubygems Repository:** [http://rubygems.org/gems/authlogic-connect](http://rubygems.org/gems/authlogic-connect)
 
 ## Rest...
 
-Thanks for the few people that are already forking the project, all the input making things move much faster.
+Thanks for the people that are already extending the project, all the input making things move much faster.
 
 Feel free to add to the wiki if you figure things out or make new distinctions.
