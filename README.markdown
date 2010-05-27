@@ -142,26 +142,35 @@ These are examples of what you can get from a User.  Code is placed in controlle
 
 User model has the following public accessors and methods.  This example assumes:
 
-# You've associated your Google, OpenID, and Twitter accounts with this app.
-# You're currently logged in via Google.
+- You've associated your Google, OpenID, and Twitter accounts with this app.
+- You're currently logged in via Google.
 
     def show
       @user = @current_user
+      
       puts @user.tokens #=> [
         #<OpenidToken id: 12, user_id: 9, type: "OpenidToken", key: "http://my-openid-login.myopenid.com/", token: nil, secret: nil, active: nil, created_at: "2010-05-24 14:52:19", updated_at: "2010-05-24 14:52:19">,
         #<TwitterToken id: 13, user_id: 9, type: "TwitterToken", key: "my-twitter-id-123", token: "twitter-token", secret: "twitter-secret", active: nil, created_at: "2010-05-24 15:03:05", updated_at: "2010-05-24 15:03:05">,
         #<GoogleToken id: 14, user_id: 9, type: "GoogleToken", key: "my-email@gmail.com", token: "google-token", secret: "google-secret", active: nil, created_at: "2010-05-24 15:09:04", updated_at: "2010-05-24 15:09:04">]
+          
       puts @user.tokens.length #=> 3
+      
       # currently logged in with...
       puts @user.active_token #=> #<GoogleToken id: 14, user_id: 9, type: "GoogleToken", key: "my-email@gmail.com", token: "google-token", secret: "google-secret", active: nil, created_at: "2010-05-24 15:09:04", updated_at: "2010-05-24 15:09:04">
+        
       puts @user.authenticated_with #=> ["twitter", "openid", "google"]
       puts @user.authenticated_with?(:twitter) #=> true
       puts @user.authenticated_with?(:facebook) #=> false
+      
       puts @user.has_token?(:google) #=> true
+      
       puts @user.get_token(:google) #=> #<GoogleToken id: 14, user_id: 9, type: "GoogleToken", key: "my-email@gmail.com", token: "google-token", secret: "google-secret", active: nil, created_at: "2010-05-24 15:09:04", updated_at: "2010-05-24 15:09:04">
+      
       # change active_token
       @user.active_token = @user.get_token(:twitter)
       puts @user.active_token #=> #<TwitterToken id: 13, user_id: 9, type: "TwitterToken", key: "my-twitter-id-123", token: "twitter-token", secret: "twitter-secret", active: nil, created_at: "2010-05-24 15:03:05", updated_at: "2010-05-24 15:03:05">
+      
+      # access oauth api
       @twitter = @user.active_token
       @twitter_profile = JSON.parse(@twitter.get("/account/verify_credentials.json").body) #=> twitter api stuff
       # ...
@@ -173,7 +182,7 @@ If they've associated their Facebook account with your site, you can access Face
 
     def show
       @user = @current_user
-      token = @user.active_token
+      token = @user.active_token # assuming this is FacebookToken
       facebook = JSON.parse(token.get("/me"))
       @profile = {
         :id     => facebook["id"],
