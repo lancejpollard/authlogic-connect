@@ -145,6 +145,8 @@ User model has the following public accessors and methods.  This example assumes
 - You've associated your Google, OpenID, and Twitter accounts with this app.
 - You're currently logged in via Google.
 
+Inside the `show` method in a controller...
+
     def show
       @user = @current_user
       
