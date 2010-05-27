@@ -1,16 +1,20 @@
-module AuthlogicConnect::Oauth
-  module Helper
-    def oauth_register_button(options = {})
-      oauth_button('register_with_oauth', options)
-    end
-    
-    def oauth_login_button(options = {})
-      oauth_button('login_with_oauth', options)
-    end
+module AuthlogicConnect::Oauth::Helper
   
-  private
-    def oauth_button(name, options = {})
-      "<input type='submit' value='#{options[:value]}' name='#{name}' id='user_submit' class='#{options[:class]}'/>"
-    end
+  # options include "name"
+  def oauth_register_hidden_input
+    oauth_input(:type => "user")
   end
+  
+  def oauth_login_hidden_input
+    oauth_input(:type => "session")
+  end
+  
+  def oauth_input(options = {})
+    tag(:input, {:type => "hidden", :name => "authentication_type", :value => options[:type]})
+  end
+  
+end
+
+module AuthlogicConnect::Oauth::FormHelper
+  
 end

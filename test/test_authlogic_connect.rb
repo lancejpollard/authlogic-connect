@@ -1,4 +1,4 @@
-require 'test/helper'
+require File.dirname(__FILE__) + '/test_helper.rb'
 
 class AuthlogicConnectTest < Test::Unit::TestCase
   context "AuthlogicConnect.config" do

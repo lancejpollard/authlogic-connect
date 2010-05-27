@@ -1,3 +1,4 @@
+# these are extensions I've found useful for this project
 class String
   # normalizes an OpenID according to http://openid.net/specs/openid-authentication-2_0.html#normalization
   def normalize_identifier

@@ -2,14 +2,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{authlogic-connect}
-  s.version = "0.0.3.4"
+  s.version = "0.0.3.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Lance Pollard"]
-  s.date = %q{2010-05-18}
+  s.date = %q{2010-05-26}
   s.description = %q{Let your app use all of Oauth and OpenID}
   s.email = %q{lancejpollard@gmail.com}
-  s.files = ["README.markdown", "Rakefile", "init.rb", "MIT-LICENSE", "lib/authlogic-connect.rb", "lib/authlogic_connect", "lib/authlogic_connect/callback_filter.rb", "lib/authlogic_connect/common", "lib/authlogic_connect/common/ext.rb", "lib/authlogic_connect/common/session.rb", "lib/authlogic_connect/common/user.rb", "lib/authlogic_connect/common/variables.rb", "lib/authlogic_connect/common.rb", "lib/authlogic_connect/engine.rb", "lib/authlogic_connect/oauth", "lib/authlogic_connect/oauth/helper.rb", "lib/authlogic_connect/oauth/process.rb", "lib/authlogic_connect/oauth/session.rb", "lib/authlogic_connect/oauth/tokens", "lib/authlogic_connect/oauth/tokens/facebook_token.rb", "lib/authlogic_connect/oauth/tokens/get_satisfaction_token.rb", "lib/authlogic_connect/oauth/tokens/google_token.rb", "lib/authlogic_connect/oauth/tokens/linked_in_token.rb", "lib/authlogic_connect/oauth/tokens/myspace_token.rb", "lib/authlogic_connect/oauth/tokens/oauth_token.rb", "lib/authlogic_connect/oauth/tokens/opensocial_token.rb", "lib/authlogic_connect/oauth/tokens/twitter_token.rb", "lib/authlogic_connect/oauth/tokens/vimeo_token.rb", "lib/authlogic_connect/oauth/tokens/yahoo_token.rb", "lib/authlogic_connect/oauth/user.rb", "lib/authlogic_connect/oauth/variables.rb", "lib/authlogic_connect/oauth.rb", "lib/authlogic_connect/openid", "lib/authlogic_connect/openid/session.rb", "lib/authlogic_connect/openid/tokens", "lib/authlogic_connect/openid/tokens/aol_token.rb", "lib/authlogic_connect/openid/tokens/blogger_token.rb", "lib/authlogic_connect/openid/tokens/flickr_token.rb", "lib/authlogic_connect/openid/tokens/my_openid_token.rb", "lib/authlogic_connect/openid/tokens/openid_token.rb", "lib/authlogic_connect/openid/user.rb", "lib/authlogic_connect/openid/variables.rb", "lib/authlogic_connect/openid.rb", "lib/authlogic_connect/token.rb", "lib/open_id_authentication.rb", "rails/init.rb", "test/database.yml", "test/test_authlogic_connect.rb", "test/test_helper.rb"]
+  s.files = ["README.markdown", "Rakefile", "init.rb", "MIT-LICENSE", "lib/authlogic-connect.rb", "lib/authlogic_connect", "lib/authlogic_connect/authlogic_connect.rb", "lib/authlogic_connect/callback_filter.rb", "lib/authlogic_connect/common", "lib/authlogic_connect/common/session.rb", "lib/authlogic_connect/common/state.rb", "lib/authlogic_connect/common/user.rb", "lib/authlogic_connect/common/variables.rb", "lib/authlogic_connect/common.rb", "lib/authlogic_connect/engine.rb", "lib/authlogic_connect/ext.rb", "lib/authlogic_connect/oauth", "lib/authlogic_connect/oauth/helper.rb", "lib/authlogic_connect/oauth/process.rb", "lib/authlogic_connect/oauth/session.rb", "lib/authlogic_connect/oauth/state.rb", "lib/authlogic_connect/oauth/tokens", "lib/authlogic_connect/oauth/tokens/facebook_token.rb", "lib/authlogic_connect/oauth/tokens/get_satisfaction_token.rb", "lib/authlogic_connect/oauth/tokens/google_token.rb", "lib/authlogic_connect/oauth/tokens/linked_in_token.rb", "lib/authlogic_connect/oauth/tokens/myspace_token.rb", "lib/authlogic_connect/oauth/tokens/oauth_token.rb", "lib/authlogic_connect/oauth/tokens/opensocial_token.rb", "lib/authlogic_connect/oauth/tokens/twitter_token.rb", "lib/authlogic_connect/oauth/tokens/vimeo_token.rb", "lib/authlogic_connect/oauth/tokens/yahoo_token.rb", "lib/authlogic_connect/oauth/user.rb", "lib/authlogic_connect/oauth/variables.rb", "lib/authlogic_connect/oauth.rb", "lib/authlogic_connect/openid", "lib/authlogic_connect/openid/process.rb", "lib/authlogic_connect/openid/session.rb", "lib/authlogic_connect/openid/state.rb", "lib/authlogic_connect/openid/tokens", "lib/authlogic_connect/openid/tokens/aol_token.rb", "lib/authlogic_connect/openid/tokens/blogger_token.rb", "lib/authlogic_connect/openid/tokens/flickr_token.rb", "lib/authlogic_connect/openid/tokens/my_openid_token.rb", "lib/authlogic_connect/openid/tokens/openid_token.rb", "lib/authlogic_connect/openid/user.rb", "lib/authlogic_connect/openid/variables.rb", "lib/authlogic_connect/openid.rb", "lib/authlogic_connect/token.rb", "lib/open_id_authentication.rb", "rails/init.rb", "test/common", "test/controllers", "test/controllers/test_users_controller.rb", "test/database.yml", "test/libs", "test/libs/database.rb", "test/libs/user.rb", "test/libs/user_session.rb", "test/oauth", "test/old.rb", "test/test_authlogic_connect.rb", "test/test_helper.rb", "test/test_user.rb"]
   s.homepage = %q{http://github.com/viatropos/authlogic-connect}
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{authlogic-connect}
@@ -23,24 +23,30 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.1.2"])
       s.add_runtime_dependency(%q<activerecord>, [">= 2.1.2"])
-      s.add_runtime_dependency(%q<authlogic>, [">= 0"])
-      s.add_runtime_dependency(%q<oauth>, [">= 0"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
+      s.add_runtime_dependency(%q<ruby-openid>, [">= 0"])
+      s.add_runtime_dependency(%q<rack-openid>, [">= 0.2.1"])
+      s.add_runtime_dependency(%q<oauth>, [">= 0"])
       s.add_runtime_dependency(%q<oauth2>, [">= 0"])
+      s.add_runtime_dependency(%q<authlogic>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.1.2"])
       s.add_dependency(%q<activerecord>, [">= 2.1.2"])
-      s.add_dependency(%q<authlogic>, [">= 0"])
-      s.add_dependency(%q<oauth>, [">= 0"])
       s.add_dependency(%q<json>, [">= 0"])
+      s.add_dependency(%q<ruby-openid>, [">= 0"])
+      s.add_dependency(%q<rack-openid>, [">= 0.2.1"])
+      s.add_dependency(%q<oauth>, [">= 0"])
       s.add_dependency(%q<oauth2>, [">= 0"])
+      s.add_dependency(%q<authlogic>, [">= 0"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.1.2"])
     s.add_dependency(%q<activerecord>, [">= 2.1.2"])
-    s.add_dependency(%q<authlogic>, [">= 0"])
-    s.add_dependency(%q<oauth>, [">= 0"])
     s.add_dependency(%q<json>, [">= 0"])
+    s.add_dependency(%q<ruby-openid>, [">= 0"])
+    s.add_dependency(%q<rack-openid>, [">= 0.2.1"])
+    s.add_dependency(%q<oauth>, [">= 0"])
     s.add_dependency(%q<oauth2>, [">= 0"])
+    s.add_dependency(%q<authlogic>, [">= 0"])
   end
 end

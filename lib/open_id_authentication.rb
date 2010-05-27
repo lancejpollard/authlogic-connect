@@ -86,7 +86,6 @@ module OpenIdAuthentication
 
     def authenticate_with_open_id(identifier = nil, options = {}, &block) #:doc:
       identifier ||= open_id_identifier
-
       if request.env[Rack::OpenID::RESPONSE]
         complete_open_id_authentication(&block)
       else

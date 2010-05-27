@@ -1,6 +1,5 @@
 module AuthlogicConnect
   class Engine < Rails::Engine
-    engine_name :authlogic_connect
     
     initializer "authlogic_connect.authentication_hook" do |app|
       app.middleware.use AuthlogicConnect::CallbackFilter

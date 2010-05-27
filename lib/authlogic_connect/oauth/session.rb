@@ -37,26 +37,15 @@ module AuthlogicConnect::Oauth
         return block.nil?
       end
       
-      def authenticating_with_oauth?
-        return false unless oauth_provider
-        
-        # Initial request when user presses one of the button helpers
-        initial_request = (controller.params && !controller.params[:login_with_oauth].blank?)
-        # When the oauth provider responds and we made the initial request
-        initial_response = (oauth_response && auth_session && auth_session[:oauth_request_class] == self.class.name)
-        
-        return initial_request || initial_response
-      end
-      
-      def authenticate_with_oauth
+      def complete_oauth_transaction
         if @record
           self.attempted_record = record
         else
           # this generated token is always the same for a user!
           # this is searching with User.find ...
           # attempted_record is part of AuthLogic
-          key = oauth_key_and_secret[:key]
-          token = oauth_token.find_by_key(key, :include => [:user]) # some weird error if I leave out the include
+          hash = oauth_token_and_secret
+          token = token_class.find_by_key_or_token(hash[:key], hash[:token], :include => [:user]) # some weird error if I leave out the include)
           self.attempted_record = token.user
         end
         

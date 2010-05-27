@@ -3,48 +3,16 @@ module AuthlogicConnect::Openid
   module Session
     # Add a simple openid_identifier attribute and some validations for the field.
     def self.included(klass)
-      klass.extend ClassMethods
       klass.class_eval do
         include InstanceMethods
       end
     end
     
-    module ClassMethods
-      # What method should we call to find a record by the openid_identifier?
-      # This is useful if you want to store multiple openid_identifiers for a single record.
-      # You could do something like:
-      #
-      #   class User < ActiveRecord::Base
-      #     def self.find_by_openid_identifier(identifier)
-      #       user.first(:conditions => {:openid_identifiers => {:identifier => identifier}})
-      #     end
-      #   end
-      #
-      # Obviously the above depends on what you are calling your assocition, etc. But you get the point.
-      #
-      # * <tt>Default:</tt> :find_by_openid_identifier
-      # * <tt>Accepts:</tt> Symbol
-      def find_by_openid_identifier_method(value = nil)
-        rw_config(:find_by_openid_identifier_method, value, :find_by_openid_identifier)
-      end
-      alias_method :find_by_openid_identifier_method=, :find_by_openid_identifier_method
-      
-      # Add this in your Session object to Auto Register a new user using openid via sreg
-      def auto_register(value=true)
-        auto_register_value(value)
-      end
-      
-      def auto_register_value(value=nil)
-        rw_config(:auto_register,value,false)
-      end
-      
-      alias_method :auto_register=,:auto_register
-    end
-    
     module InstanceMethods
+      include AuthlogicConnect::Openid::Process
+      
       def self.included(klass)
         klass.class_eval do
-          attr_reader :openid_identifier
           validate :validate_openid_error
           validate :validate_by_openid, :if => :authenticating_with_openid?
         end
@@ -58,18 +26,10 @@ module AuthlogicConnect::Openid
         self.openid_identifier = hash[:openid_identifier] if !hash.nil? && hash.key?(:openid_identifier)
       end
       
-      def openid_identifier=(value)
-        @openid_identifier = value.blank? ? nil : OpenIdAuthentication.normalize_identifier(value)
-        @openid_error = nil
-      rescue OpenIdAuthentication::InvalidOpenId => e
-        @openid_identifier = nil
-        @openid_error = e.message
-      end
-      
       # Cleaers out the block if we are authenticating with OpenID, so that we can redirect without a DoubleRender
       # error.
       def save_with_openid(&block)
-        block = nil if !openid_identifier.blank?
+        block = nil if Token.find_by_key(openid_identifier.normalize_identifier)
         return block.nil?
       end
       
@@ -78,21 +38,14 @@ module AuthlogicConnect::Openid
           attempted_record.nil? && errors.empty? && (!openid_identifier.blank? || (controller.params[:open_id_complete] && controller.params[:for_session]))
         end
         
-        def find_by_openid_identifier_method
-          self.class.find_by_openid_identifier_method
-        end
-
-        def find_by_openid_identifier_method
-          self.class.find_by_openid_identifier_method
-        end
-        
         def auto_register?
-          self.class.auto_register_value
+          false
         end
         
         def validate_by_openid
           self.remember_me = auth_params[:remember_me] == "true" if auth_params.key?(:remember_me)
-          self.attempted_record = klass.send(find_by_openid_identifier_method, openid_identifier)
+          token = Token.find_by_key(openid_identifier.normalize_identifier, :include => [:user])
+          self.attempted_record = token.user if token
           if !attempted_record
             if auto_register?
               self.attempted_record = klass.new :openid_identifier => openid_identifier

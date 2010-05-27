@@ -10,8 +10,8 @@ end
 
 require 'open_id_authentication'
 
-config.middleware.use AuthlogicConnect::CallbackFilter
 config.middleware.use OpenIdAuthentication
+config.middleware.use AuthlogicConnect::CallbackFilter
 
 config.after_initialize do
   OpenID::Util.logger = Rails.logger

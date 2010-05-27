@@ -1,5 +1,8 @@
+# http://code.google.com/apis/accounts/docs/OAuth_ref.html
+# http://code.google.com/apis/accounts/docs/OpenID.html#settingup
 # http://code.google.com/apis/accounts/docs/OAuth.html
 # http://code.google.com/apis/accounts/docs/RegistrationForWebAppsAuto.html
+# http://www.manu-j.com/blog/add-google-oauth-ruby-on-rails-sites/214/
 # http://googlecodesamples.com/oauth_playground/
 # Scopes:
 # Analytics         https://www.google.com/analytics/feeds/ 
@@ -29,5 +32,10 @@ class GoogleToken < OauthToken
     :authorize_path     => "/accounts/OAuthAuthorizeToken",
     :access_token_path  => "/accounts/OAuthGetAccessToken",
     :scope              => "https://www.google.com/m8/feeds/"
+  
+  key do |access_token|
+    body = JSON.parse(access_token.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=0").body)
+    email = body["feed"]["author"].first["email"]["$t"] # $t is some weird google json thing
+  end
   
 end

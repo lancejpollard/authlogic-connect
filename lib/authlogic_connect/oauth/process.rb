@@ -1,83 +1,68 @@
-module AuthlogicConnect::Oauth
-  module Process
+module AuthlogicConnect::Oauth::Process
 
-  private
-    include AuthlogicConnect::Oauth::Variables
+  include AuthlogicConnect::Oauth::Variables
 
-    def validate_by_oauth
-      validate_email_field = false
-
-      if oauth_response.blank?
-        redirect_to_oauth
-      else
-        authenticate_with_oauth
-      end
+  # Step 2: after save is called, it runs this method for validation
+  def validate_by_oauth
+    validate_email_field = false
+    unless new_oauth_request? # shouldn't be validating if it's redirecting...
+      restore_attributes
+      complete_oauth_transaction
     end
-    
-    def redirecting_to_oauth_server?
-      authenticating_with_oauth? && oauth_response.blank?
-    end
-    
-    def redirect_to_oauth
-      save_oauth_callback
-
-      if oauth_version == 1.0
-        request = oauth_token.get_request_token(oauth_callback_url)
-        save_auth_session(request)
-        auth_controller.redirect_to request.authorize_url
-      else
-        auth_controller.redirect_to oauth_consumer.web_server.authorize_url(
-          :redirect_uri => oauth_callback_url,
-          :scope => oauth_token.config[:scope]
-        )
-      end
-    end
-    
-    def save_oauth_callback
-      puts "save_oauth_callback"
-      # Store the class which is redirecting, so we can ensure other classes
-      # don't get confused and attempt to use the response
-      auth_session[:oauth_request_class]        = self.class.name
-      auth_session[:oauth_provider]             = auth_params[:oauth_provider]
-
-      # Tell our rack callback filter what method the current request is using
-      auth_session[:auth_callback_method]      = auth_controller.request.method
-    end
-    
-    def save_auth_session(request)
-      # store token and secret
-      auth_session[:oauth_request_token]        = request.token
-      auth_session[:oauth_request_token_secret] = request.secret
-    end
-
-    def oauth_callback_url
-      auth_controller.url_for :controller => auth_controller.controller_name, :action => auth_controller.action_name
-    end
-    
-    def request_token
-      oauth_token.request_token(auth_session[:oauth_request_token], auth_session[:oauth_request_token_secret])
-    end
-    
-    # in oauth 1.0, key = oauth_token, secret = oauth_secret
-    # in oauth 2.0, key = code, secret = access_token
-    def oauth_key_and_secret
-      if oauth_version == 1.0
-        result = request_token.get_access_token(:oauth_verifier => auth_params[:oauth_verifier])
-        result = {:key => result.token, :secret => result.secret}
-      else
-        result = oauth_consumer.web_server.get_access_token(oauth_key, :redirect_uri => oauth_callback_url)
-        result = {:key => result.token, :secret => oauth_key}
-      end
-      result
-    end
-
-    def generate_access_token
-      if oauth_version == 1.0
-        request_token.get_access_token(:oauth_verifier => auth_params[:oauth_verifier])
-      else
-        oauth_consumer.web_server.get_access_token(oauth_key, :redirect_uri => oauth_callback_url)
-      end
-    end
-    
   end
+  
+  # Step 3: if new_oauth_request?, redirect to oauth provider
+  def redirect_to_oauth
+    save_oauth_session
+    authorize_url = token_class.authorize_url(auth_callback_url) do |request_token|
+      save_auth_session_token(request_token) # only for oauth version 1
+    end
+    auth_controller.redirect_to authorize_url
+  end
+  
+  # Step 3a: save our passed-parameters into the session,
+  # so we can retrieve them after the redirect calls back
+  def save_oauth_session
+    # Store the class which is redirecting, so we can ensure other classes
+    # don't get confused and attempt to use the response
+    auth_session[:auth_request_class]         = self.class.name
+  
+    auth_session[:authentication_type]        = auth_params[:authentication_type]
+    auth_session[:oauth_provider]             = auth_params[:oauth_provider]
+    auth_session[:auth_method]                = "oauth"
+    
+    # Tell our rack callback filter what method the current request is using
+    auth_session[:auth_callback_method]       = auth_controller.request.method
+  end
+  
+  # Step 3b (if version 1.0 of oauth)
+  def save_auth_session_token(request)
+    # store token and secret
+    auth_session[:oauth_request_token]        = request.token
+    auth_session[:oauth_request_token_secret] = request.secret
+  end
+  
+  def restore_attributes
+  end
+  
+  # Step 4: on callback, run this method
+  def authenticate_with_oauth
+    # implemented in User and Session Oauth modules
+  end
+  
+  # Step last, after the response
+  # having lots of trouble testing logging and out multiple times,
+  # so there needs to be a solid way to know when a user has messed up loggin in.
+  def cleanup_oauth_session
+    [:auth_request_class,
+      :authentication_type,
+      :auth_method,
+      :auth_attributes,
+      :oauth_provider,
+      :auth_callback_method,
+      :oauth_request_token,
+      :oauth_request_token_secret
+    ].each {|key| auth_session.delete(key)}
+  end
+    
 end
