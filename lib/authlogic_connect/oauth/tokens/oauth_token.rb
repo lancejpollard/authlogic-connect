@@ -119,7 +119,8 @@ class OauthToken < Token
     # if you pass a hash as the second parameter to consumer.get_request_token,
     # ruby oauth will think this is a form and all sorts of bad things happen
     def get_request_token(callback_url)
-      consumer.get_request_token(:oauth_callback => callback_url)
+      options = {:scope => config[:scope]} if config[:scope]
+      consumer.get_request_token({:oauth_callback => callback_url}, options)
     end
     
     def get_access_token(oauth_verifier)

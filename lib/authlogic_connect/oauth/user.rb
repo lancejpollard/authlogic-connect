@@ -48,7 +48,7 @@ module AuthlogicConnect::Oauth::User
     # it is called by the validation chain.
     def complete_oauth_transaction
       unless create_oauth_token
-        self.errors.add(:tokens, "you have already created an account using your #{oauth_token.service_name} account, so it")
+        self.errors.add(:tokens, "you have already created an account using your #{token_class.service_name} account, so it")
       end
     end
     
