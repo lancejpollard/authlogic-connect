@@ -7,7 +7,7 @@ module AuthlogicConnect::Oauth
         include InstanceMethods
       end
     end
-
+    
     module InstanceMethods
       include Process
 
@@ -30,12 +30,6 @@ module AuthlogicConnect::Oauth
       end
 
     private
-      # Clears out the block if we are authenticating with oauth,
-      # so that we can redirect without a DoubleRender error.
-      def save_with_oauth(&block)
-        block = nil if redirecting_to_oauth_server?
-        return block.nil?
-      end
       
       def complete_oauth_transaction
         if @record
@@ -46,11 +40,21 @@ module AuthlogicConnect::Oauth
           # attempted_record is part of AuthLogic
           hash = oauth_token_and_secret
           token = token_class.find_by_key_or_token(hash[:key], hash[:token], :include => [:user]) # some weird error if I leave out the include)
-          self.attempted_record = token.user
+          if token
+            self.attempted_record = token.user
+          elsif auto_register?
+            self.attempted_record = klass.new
+            self.attempted_record.tokens << token_class.new(hash)
+            self.attempted_record.save
+          else
+            auth_session[:_key] = hash[:key]
+            auth_session[:_token] = hash[:token]
+            auth_session[:_secret] = hash[:secret]
+          end
         end
-        
+
         if !attempted_record
-          errors.add_to_base("Could not find user in our database, have you registered with your oauth account?")
+          errors.add(:user, "Could not find user in our database, have you registered with your oauth account?")
         end
       end
     end

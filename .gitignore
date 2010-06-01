@@ -1,5 +1,5 @@
 .DS_Store
-pkg
+pkg/**/*
 doc/**/*
 *.tgz
 *.gem

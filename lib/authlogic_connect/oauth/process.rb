@@ -4,20 +4,29 @@ module AuthlogicConnect::Oauth::Process
 
   # Step 2: after save is called, it runs this method for validation
   def validate_by_oauth
-    validate_email_field = false
-    unless new_oauth_request? # shouldn't be validating if it's redirecting...
-      restore_attributes
-      complete_oauth_transaction
+    if processing_authentication
+      authentication_protocol(:oauth, :start) || authentication_protocol(:oauth, :complete)
     end
   end
   
   # Step 3: if new_oauth_request?, redirect to oauth provider
-  def redirect_to_oauth
+  def start_oauth
     save_oauth_session
     authorize_url = token_class.authorize_url(auth_callback_url) do |request_token|
       save_auth_session_token(request_token) # only for oauth version 1
     end
     auth_controller.redirect_to authorize_url
+  end
+  
+  # Step 4: on callback, run this method
+  def complete_oauth
+    # implemented in User and Session Oauth modules
+    unless new_oauth_request? # shouldn't be validating if it's redirecting...
+      restore_attributes
+      complete_oauth_transaction
+      return true
+    end
+    return false
   end
   
   # Step 3a: save our passed-parameters into the session,
@@ -45,11 +54,6 @@ module AuthlogicConnect::Oauth::Process
   def restore_attributes
   end
   
-  # Step 4: on callback, run this method
-  def authenticate_with_oauth
-    # implemented in User and Session Oauth modules
-  end
-  
   # Step last, after the response
   # having lots of trouble testing logging and out multiple times,
   # so there needs to be a solid way to know when a user has messed up loggin in.
@@ -61,8 +65,11 @@ module AuthlogicConnect::Oauth::Process
       :oauth_provider,
       :auth_callback_method,
       :oauth_request_token,
-      :oauth_request_token_secret
-    ].each {|key| auth_session.delete(key)}
+      :oauth_request_token_secret,
+      :_key,
+      :_token,
+      :_secret,
+    ].each {|key| remove_session_key(key)}
   end
     
 end

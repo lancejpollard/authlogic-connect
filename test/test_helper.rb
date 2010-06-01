@@ -75,7 +75,7 @@ module ControllerHelpers
   
   def url_for(options = {})
     p = []
-    option.each do |k,v|
+    options.each do |k,v|
       p << "#{k}=#{v}"
     end
     p = "?#{p.join("&")}"

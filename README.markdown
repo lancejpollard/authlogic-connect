@@ -1,8 +1,8 @@
 # AuthlogicConnect
 
-AuthlogicConnect is an extension of the Authlogic library to add extensive Oauth and OpenID support.
+AuthlogicConnect is an extension of the Authlogic library that aims to add complete and seamless Oauth and OpenID support to your application.
 
-It allows you to login through any of the 30+ Oauth and OpenID providers on the Internet.
+It allows you to login through any of the 30+ Oauth and OpenID providers on the Internet without having to write any of the logic yourself.
 
 That makes life easy and gives you a lot of power.
 
@@ -32,7 +32,7 @@ AuthlogicConnect currently allows you to login with 7 Oauth providers and all th
 - [OpenID Providers](http://en.wikipedia.org/wiki/List_of_OpenID_providers)
 - [More OpenID](http://openid.net/get-an-openid/)
 
-## Install and use
+## Install
 
 ### 1. Install AuthlogicConnect
 
@@ -57,7 +57,7 @@ Rails 3: `Gemfile`
     gem "oauth2"
     gem "authlogic-connect"
     
-### 3.  Add the `OpenIdAuthentication.store`
+### 3.  Add the OpenIdAuthentication.store
 
 Do to [some strange problem](http://github.com/openid/ruby-openid/issues#issue/1) I have yet to really understand, Rails 2.3.5 doesn't like when `OpenIdAuthentication.store` is null, which means it uses the "in memory" store and for some reason fails.
 
@@ -237,4 +237,8 @@ Thanks for the people that are already extending the project, all the input maki
 
 Feel free to add to the wiki if you figure things out or make new distinctions.
 
-https://rpxnow.com/features
+## Flow
+
+- Try to create a session
+- Session logs into provider
+- On success, if no user, redirect to User#create

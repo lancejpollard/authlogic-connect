@@ -5,7 +5,7 @@ module AuthlogicConnect::Oauth::State
   # checks that we just passed parameters to it,
   # and that the parameters say 'authentication_method' == 'oauth'
   def oauth_request?
-    !auth_params.nil? && oauth_provider?
+    auth_params? && oauth_provider?
   end
   
   # 2. from call
@@ -13,19 +13,23 @@ module AuthlogicConnect::Oauth::State
   def oauth_response?
     !oauth_response.nil? && !auth_session.nil? && auth_session[:auth_request_class] == self.class.name && auth_session[:auth_method] == "oauth"
   end
-  alias_method :oauth_complete?, :oauth_response?
+  
+  def oauth_complete?
+    oauth_response? || stored_oauth_token_and_secret?
+  end
   
   # 3. either to or from call
   def using_oauth?
-    oauth_request? || oauth_response?
+    oauth_request? || oauth_response? || stored_oauth_token_and_secret?
   end
   
   def new_oauth_request?
-    oauth_response.blank?
+    return false if stored_oauth_token_and_secret?
+    return oauth_response.blank?
   end
   
   def oauth_provider?
-    !oauth_provider.nil? && !oauth_provider.empty?
+    !oauth_provider.blank?
   end
   
   # main method we call on validation
@@ -37,18 +41,20 @@ module AuthlogicConnect::Oauth::State
     authenticating_with_oauth? && !oauth_complete?
   end
   
-  # both checks if it can redirect, and does the redirect.
-  # is there a more concise way to do this?
-  def redirecting_to_oauth_server?
-    if allow_oauth_redirect?
-      redirect_to_oauth
-      return true
-    end
-    return false
+  def start_oauth?
+    authenticating_with_oauth? && !oauth_complete?
+  end
+  
+  def complete_oauth?
+    using_oauth? && !new_oauth_request?
   end
   
   def validate_password_with_oauth?
     !using_oauth? && require_password?
+  end
+  
+  def stored_oauth_token_and_secret?
+    !is_auth_session? && auth_params && auth_params.has_key?(:_key) && auth_params.has_key?(:_token) && auth_params.has_key?(:_secret)
   end
   
 end

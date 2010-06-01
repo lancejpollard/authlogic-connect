@@ -108,7 +108,6 @@ module OpenIdAuthentication
     def complete_open_id_authentication
       response   = request.env[Rack::OpenID::RESPONSE]
       identifier = response.display_identifier
-
       case response.status
       when OpenID::Consumer::SUCCESS
         yield Result[:successful], identifier,

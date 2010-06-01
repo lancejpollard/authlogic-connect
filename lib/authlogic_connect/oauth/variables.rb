@@ -41,9 +41,18 @@ module AuthlogicConnect::Oauth::Variables
     token_class.consumer
   end
   
+  def stored_oauth_token_and_secret
+    if auth_controller?
+      {:key => auth_params[:_key], :token => auth_params[:_token], :secret => auth_params[:_secret]}
+    else
+      {:key => nil, :token => nil, :secret => nil}
+    end
+  end
+  
   # this is a thick method.
   # it gives you the final key and secret that we will store in the database
   def oauth_token_and_secret
+    return stored_oauth_token_and_secret if stored_oauth_token_and_secret?
     token_class.get_token_and_secret(
       :token          => auth_session[:oauth_request_token],
       :secret         => oauth_version == 1.0 ? auth_session[:oauth_request_token_secret] : oauth_token,

@@ -24,17 +24,19 @@ module AuthlogicConnect::Oauth::User
         validates_length_of_password_confirmation_field_options validates_length_of_password_confirmation_field_options.merge(:if => :validate_password_with_oauth?)
         validates_length_of_login_field_options validates_length_of_login_field_options.merge(:if => :validate_password_with_oauth?)
         validates_format_of_login_field_options validates_format_of_login_field_options.merge(:if => :validate_password_with_oauth?)
-      end
-      
-      # email needs to be optional for oauth
-      base.validate_email_field = false
-    end
         
+      end
+    end
+    
     # user adds a few extra things to this method from Process
     # modules work like inheritance
     def save_oauth_session
       super
       auth_session[:auth_attributes]            = attributes.reject!{|k, v| v.blank?} unless is_auth_session?
+    end
+    
+    def redirect_to_oauth
+      return has_token?(oauth_provider) ? false : super
     end
     
     def restore_attributes
@@ -47,20 +49,13 @@ module AuthlogicConnect::Oauth::User
     # to the database.
     # it is called by the validation chain.
     def complete_oauth_transaction
-      unless create_oauth_token
-        self.errors.add(:tokens, "you have already created an account using your #{token_class.service_name} account, so it")
-      end
-    end
-    
-    def create_oauth_token
       token = token_class.new(oauth_token_and_secret)
       
       if has_token?(oauth_provider) || Token.find_by_key(token.key) || Token.find_by_token(token.token)
-        return false
+        self.errors.add(:tokens, "you have already created an account using your #{token_class.service_name} account, so it")
       else
         self.tokens << token
         self.active_token = token
-        return true
       end
     end
     

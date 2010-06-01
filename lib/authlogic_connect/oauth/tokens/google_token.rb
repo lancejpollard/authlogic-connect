@@ -27,15 +27,15 @@
 # YouTube           http://gdata.youtube.com
 class GoogleToken < OauthToken
   
-  settings "https://www.google.com", 
-    :request_token_path => "/accounts/OAuthGetRequestToken",
-    :authorize_path     => "/accounts/OAuthAuthorizeToken",
-    :access_token_path  => "/accounts/OAuthGetAccessToken",
-    :scope              => "https://www.google.com/m8/feeds/"
-  
-  key do |access_token|
-    body = JSON.parse(access_token.get("https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=0").body)
-    email = body["feed"]["author"].first["email"]["$t"] # $t is some weird google json thing
-  end
-  
+   settings "https://www.google.com",
+     :request_token_path => "/accounts/OAuthGetRequestToken",
+     :authorize_path     => "/accounts/OAuthAuthorizeToken",
+     :access_token_path  => "/accounts/OAuthGetAccessToken",
+     :scope              => "https://www.googleapis.com/auth/userinfo#email"
+
+   key do |access_token|
+     body = JSON.parse(access_token.get("https://www.googleapis.com/userinfo/email?alt=json").body)
+     email = body["data"]["email"]
+   end
+   
 end

@@ -9,11 +9,11 @@ module AuthlogicConnect::Openid::Variables
 #  end
   
   def openid_identifier
-    auth_params[:openid_identifier]
+    auth_params[:openid_identifier] if auth_params?
   end
   
   def openid_provider
-    from_session_or_params(:openid_provider)
+    from_session_or_params(:openid_provider) if auth_controller?
   end
   
 end

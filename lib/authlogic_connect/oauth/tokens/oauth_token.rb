@@ -78,6 +78,7 @@ class OauthToken < Token
       redirect_uri    = options[:redirect_uri]
       token           = options[:token]
       secret          = options[:secret]
+
       if oauth_version == 1.0
         access = request_token(token, secret).get_access_token(:oauth_verifier => oauth_verifier)
         result = {:token => access.token, :secret => access.secret, :key => nil}
@@ -95,6 +96,7 @@ class OauthToken < Token
         access = consumer.web_server.get_access_token(secret, :redirect_uri => redirect_uri)
         result = {:token => access.token, :secret => secret, :key => nil}
       end
+      
       result
     end
     

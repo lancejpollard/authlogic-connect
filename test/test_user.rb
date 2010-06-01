@@ -51,8 +51,8 @@ module AuthlogicConnect
             @save_success = @user.save
           end
           
-          should "not be a valid save" do
-            assert_equal false, @save_success
+          should "be a valid save" do
+            assert @save_success
           end
           
           should "not be using oauth" do
@@ -123,67 +123,6 @@ module AuthlogicConnect
             assert @user.authenticating_with_oauth?
           end
           
-          context "and 'save_with_oauth', manually checking each step" do
-            
-            setup do
-              # mock save
-              # this, and the whole redirect process happens
-              # but we'll just assume we saved the session data and got the redirect back
-              @user.save_oauth_session
-              @user.save(:skip_redirect => true, :keep_session => true) do
-                "I'm the block you want"
-              end
-              # copy to test controller
-              @user.auth_session.each do |key, value|
-                @user.auth_controller.session[key] = value
-              end
-            end
-            
-            should "should have a full session" do
-              @session_vars.each {|key| assert @user.auth_session.has_key?(key)}
-            end
-            
-            should "'cleanup_auth_session'" do
-              @user.cleanup_auth_session
-              @session_vars.each {|key| assert_equal false, @user.auth_session.has_key?(key)}
-            end
-            
-            teardown do
-              @user.destroy
-            end
-            
-          end
-          
-          context "and 'save_with_oauth' completely" do
-            setup do
-              # mock save
-              # this, and the whole redirect process happens
-              # but we'll just assume we saved the session data and got the redirect back
-              @user.save_oauth_session
-              @user.save(:skip_redirect => true, :keep_session => false) do
-                "I'm the block you want"
-              end
-              # copy to test controller
-              @user.auth_controller.session = @user.auth_session
-            end
-            
-            should "have a clear session" do
-              @session_vars.each do |key|
-                assert_equal false, @user.auth_session.has_key?(key)
-              end
-            end
-            
-            should "be a valid save" do
-              assert @user.valid?
-            end
-            
-            # so login isn't saved
-            teardown do
-              User.all.collect(&:destroy)
-            end
-          end
-          
-        
         end
         
         context "with openid parameters" do

@@ -46,68 +46,30 @@ module AuthlogicConnect::Common::User
     # authentication mission we are trying to accomplish.
     # instead, we just return save as false.
     # the next time around, when we recieve the callback,
-    # we will run the validations
+    # we will run the validations.
+    # when you call 'current_user_session' in ApplicationController,
+    # it leads to calling 'save' on this User object via "session.record.save",
+    # from the 'persisting?' method.  So we don't want any of this to occur
+    # when that save is called, and the only way to check currently is
+    # to check if there is a block_given?
     def save(options = {}, &block)
-      # debug_user_save_pre(options, &block)
+      self.errors.clear
+      # log_state
       options = {} if options == false
-      unless options[:skip_redirect] == true
-        return false if remotely_authenticating?(&block)
-      end
-      # forces you to validate, maybe get rid of if needed,
-      # but everything depends on this
-      if ActiveRecord::VERSION::MAJOR < 3
-        result = super(true) # validate!
-      else
-        result = super(options.merge(:validate => true))
-      end
-      # debug_user_save_post
-      yield(result) if block_given? # give back to controller
+      options[:validate] = true unless options.has_key?(:validate)
+      save_options = ActiveRecord::VERSION::MAJOR < 3 ? options[:validate] : options
       
-      cleanup_auth_session if result && !(options.has_key?(:keep_session) && options[:keep_session])
-      
-      result
-    end
-    
-    def remotely_authenticating?(&block)
-      return redirecting_to_oauth_server? if using_oauth? && block_given?
-      return redirecting_to_openid_server? if using_openid?
-      return false
-    end
-    
-    # it only reaches this point once it has returned, or you
-    # have manually skipped the redirect and save was called directly.
-    def cleanup_auth_session
-      cleanup_oauth_session
-      cleanup_openid_session
-    end
-    
-    def validate_password_with_oauth?
-      !using_openid? && super
-    end
-    
-    def validate_password_with_openid?
-      !using_oauth? && super
-    end
-    
-    # test methods for dev/debugging, commented out by default
-    def debug_user_save_pre(options = {}, &block)
-      puts "USER SAVE "
-      puts "block_given? #{block_given?.to_s}"
-      puts "using_oauth? #{using_oauth?.to_s}"
-      puts "using_openid? #{using_openid?.to_s}"
-      puts "authenticating_with_oauth? #{authenticating_with_oauth?.to_s}"
-      puts "authenticating_with_openid? #{authenticating_with_openid?.to_s}"
-      puts "validate_password_with_oauth? #{validate_password_with_oauth?.to_s}"
-      puts "validate_password_with_openid? #{validate_password_with_openid?.to_s}"
-      puts "!using_openid? && require_password? #{(!using_openid? && require_password?).to_s}"
-    end
-    
-    def debug_user_save_post
-      puts "ERRORS: #{errors.full_messages}"
-      puts "using_oauth? #{using_oauth?.to_s}"
-      puts "using_openid? #{using_openid?.to_s}"
-      puts "validate_password_with_oauth? #{validate_password_with_oauth?.to_s}"
-      puts "validate_password_with_openid? #{validate_password_with_openid?.to_s}"
+      # kill the block if we're starting authentication
+      authenticate_via_protocol(block_given?, options) do |redirecting|
+        block = nil if redirecting
+        # forces you to validate, only if a block is given
+        result = super(save_options) # validate!
+        unless block.nil?
+          cleanup_authentication_session(options)
+          yield(result)
+        end
+        result
+      end
     end
     
   end
