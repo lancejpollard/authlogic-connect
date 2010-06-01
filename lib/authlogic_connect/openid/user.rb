@@ -31,7 +31,7 @@ module AuthlogicConnect::Openid
         if self.respond_to?(:password) && self.respond_to?(:password_confirmation)
           attrs_to_save.merge!(:password => password, :password_confirmation => password_confirmation)
         end
-        attrs_to_save
+        attrs_to_save.reject!{|k, v| v.blank? || !self.respond_to?(k)}
       end
     end
   end

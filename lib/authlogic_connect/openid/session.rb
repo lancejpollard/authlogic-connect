@@ -22,7 +22,6 @@ module AuthlogicConnect::Openid
         super
         values = value.is_a?(Array) ? value : [value]
         hash = values.first.is_a?(Hash) ? values.first.with_indifferent_access : nil
-        self.openid_identifier = hash[:openid_identifier] if !hash.nil? && hash.key?(:openid_identifier)
       end
       
       private
@@ -36,14 +35,14 @@ module AuthlogicConnect::Openid
             errors.add_to_base(result.message)
           end
           
-          token = Token.find_by_key(openid_identifier.normalize_identifier, :include => [:user])
+          token = AccessToken.find_by_key(openid_identifier.normalize_identifier, :include => [:user])
           
           self.attempted_record = token.user if token
           
           if !attempted_record
             if auto_register?
               self.attempted_record = klass.new
-              self.attempted_record.tokens << OpenidToken.new(:key => openid_identifier.normalize_identifier)
+              self.attempted_record.access_tokens << OpenidToken.new(:key => openid_identifier.normalize_identifier)
               self.attempted_record.save
             else
               auth_session[:openid_identifier] = openid_identifier

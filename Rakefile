@@ -6,7 +6,7 @@ require 'rake/gempackagetask'
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
   s.author            = "Lance Pollard"
-  s.version           = "0.0.4.0"
+  s.version           = "0.0.4.05"
   s.summary           = "Authlogic Connect: Oauth and OpenID made dead simple"
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
   s.email             = "lancejpollard@gmail.com"
@@ -68,4 +68,8 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.add(files)
   rdoc.main = "README.markdown"
   rdoc.title = spec.summary
+end
+
+task :yank do
+  `gem yank #{spec.name} -v #{spec.version}`
 end

@@ -1,4 +1,4 @@
-class OpenidToken < Token
+class OpenidToken < AccessToken
   
   before_save :format_identifier
   

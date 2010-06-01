@@ -11,13 +11,13 @@ require "#{this}/open_id_authentication"
 require "#{library}/ext"
 require "#{library}/authlogic_connect"
 require "#{library}/callback_filter"
-require "#{library}/token"
+require "#{library}/access_token"
 require "#{library}/openid"
 require "#{library}/oauth"
 require "#{library}/common"
 require "#{library}/engine" if defined?(Rails) && Rails::VERSION::MAJOR == 3
 
-custom_models =   ["#{library}/token"]
+custom_models =   ["#{library}/access_token"]
 custom_models +=  Dir["#{library}/oauth/tokens"]
 custom_models +=  Dir["#{library}/openid/tokens"]
 

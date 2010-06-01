@@ -14,18 +14,18 @@ module AuthlogicConnect::Common::User
     
     def self.included(base)
       base.class_eval do
-        has_many :tokens, :class_name => "Token", :dependent => :destroy
-        belongs_to :active_token, :class_name => "Token", :dependent => :destroy
-        accepts_nested_attributes_for :tokens, :active_token
+        has_many :access_tokens, :class_name => "AccessToken", :dependent => :destroy
+        belongs_to :active_token, :class_name => "AccessToken", :dependent => :destroy
+        accepts_nested_attributes_for :access_tokens, :active_token
       end
     end
     
     def authenticated_with
-      @authenticated_with ||= self.tokens.collect{|t| t.service_name.to_s}
+      @authenticated_with ||= self.access_tokens.collect{|t| t.service_name.to_s}
     end
     
     def authenticated_with?(service)
-      self.tokens.detect{|t| t.service_name.to_s == service.to_s}
+      self.access_tokens.detect{|t| t.service_name.to_s == service.to_s}
     end
     
     def update_attributes(attributes, &block)
@@ -38,7 +38,7 @@ module AuthlogicConnect::Common::User
     end
     
     def get_token(service_name)
-      self.tokens.detect {|i| i.service_name.to_s == service_name.to_s}
+      self.access_tokens.detect {|i| i.service_name.to_s == service_name.to_s}
     end
     
     # core save method coordinating how to save the user.

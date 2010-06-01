@@ -31,10 +31,10 @@ module AuthlogicConnect::Openid::Process
       errors.add_to_base(result.message)
     end
     
-    if Token.find_by_key(openid_identifier.normalize_identifier)
+    if AccessToken.find_by_key(openid_identifier.normalize_identifier)
     else
       token = OpenidToken.new(:key => openid_identifier)
-      self.tokens << token
+      self.access_tokens << token
       self.active_token = token
     end
   end
@@ -50,7 +50,7 @@ module AuthlogicConnect::Openid::Process
   def validate_by_openid
     if processing_authentication
       authentication_protocol(:openid, :start) || authentication_protocol(:openid, :complete)
-      errors.add(:tokens, "had the following error: #{@openid_error}") if @openid_error
+      errors.add(:access_tokens, "had the following error: #{@openid_error}") if @openid_error
     end
   end
   

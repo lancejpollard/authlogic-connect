@@ -32,7 +32,7 @@ module AuthlogicConnect::Oauth::User
     # modules work like inheritance
     def save_oauth_session
       super
-      auth_session[:auth_attributes]            = attributes.reject!{|k, v| v.blank?} unless is_auth_session?
+      auth_session[:auth_attributes]            = attributes.reject!{|k, v| v.blank? || !self.respond_to?(k)} unless is_auth_session?
     end
     
     def redirect_to_oauth
@@ -51,10 +51,10 @@ module AuthlogicConnect::Oauth::User
     def complete_oauth_transaction
       token = token_class.new(oauth_token_and_secret)
       
-      if has_token?(oauth_provider) || Token.find_by_key(token.key) || Token.find_by_token(token.token)
+      if has_token?(oauth_provider) || token_class.find_by_key_or_token(token.key, token.token)
         self.errors.add(:tokens, "you have already created an account using your #{token_class.service_name} account, so it")
       else
-        self.tokens << token
+        self.access_tokens << token
         self.active_token = token
       end
     end

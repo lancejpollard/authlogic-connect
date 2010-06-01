@@ -1,4 +1,4 @@
-class OauthToken < Token
+class OauthToken < AccessToken
   
   def client
     unless @client
@@ -63,7 +63,9 @@ class OauthToken < Token
     def find_by_key_or_token(key, token, options = {})
       result = self.find_by_key(key, options) unless key.nil?
       unless result
-        result = self.find_by_token(token, options) unless token.nil?
+        if !token.blank? && self.respond_to?(:find_by_token)
+          result = self.find_by_token(token, options)
+        end
       end
       result 
     end

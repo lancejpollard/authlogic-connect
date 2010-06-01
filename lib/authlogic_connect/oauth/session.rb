@@ -44,7 +44,7 @@ module AuthlogicConnect::Oauth
             self.attempted_record = token.user
           elsif auto_register?
             self.attempted_record = klass.new
-            self.attempted_record.tokens << token_class.new(hash)
+            self.attempted_record.access_tokens << token_class.new(hash)
             self.attempted_record.save
           else
             auth_session[:_key] = hash[:key]

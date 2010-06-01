@@ -13,9 +13,9 @@ module AuthlogicConnect
       
       context "responds to added oauth methods (our oauth api on the user)" do
         
-        should "have 'tokens' method" do
-          assert @user.respond_to?(:tokens)
-          assert_equal [], @user.tokens
+        should "have 'access_tokens' method" do
+          assert @user.respond_to?(:access_tokens)
+          assert_equal [], @user.access_tokens
         end
         
         should "have 'active_token' method" do
