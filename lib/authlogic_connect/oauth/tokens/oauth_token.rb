@@ -52,7 +52,7 @@ class OauthToken < AccessToken
         if oauth_version == 1.0
           @consumer = OAuth::Consumer.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
         else
-          @consumer = OAuth2::Client.new(credentials[:key], credentials[:secret], config)
+          @consumer = OAuth2::Client.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {})
         end
       end
       

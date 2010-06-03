@@ -242,3 +242,7 @@ Feel free to add to the wiki if you figure things out or make new distinctions.
 - Try to create a session
 - Session logs into provider
 - On success, if no user, redirect to User#create
+
+#### Notes
+
+- Build mechanize tool to automatically create applications with service providers.
