@@ -19,7 +19,11 @@ class OauthToken < AccessToken
   def get(path, options = {})
     client.get(path, options)
   end
-  
+
+  def post(path, body='', headers ={})
+    client.post(path, body, headers)
+  end
+
   class << self
     
     # oauth version, 1.0 or 2.0
