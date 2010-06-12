@@ -7,3 +7,4 @@ doc/**/*
 *.yml
 test/config.yml
 *.gemspec
+*~
