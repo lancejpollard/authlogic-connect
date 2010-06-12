@@ -17,7 +17,7 @@ class OauthToken < AccessToken
   end
   
   def get(path, options = {})
-    client.get(path)
+    client.get(path, options)
   end
   
   class << self
