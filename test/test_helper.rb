@@ -1,12 +1,11 @@
-require "test/unit"
 require "rubygems"
 require "ruby-debug"
-gem "activerecord", "= 2.3.5"
+gem 'test-unit'
+require "test/unit"
+require 'active_support'
+require 'active_support/test_case'
 require "active_record"
 require "active_record/fixtures"
-gem "activesupport", "= 2.3.5"
-require 'active_support'
-gem 'actionpack', "= 2.3.5"
 require 'action_controller'
 require 'shoulda'
 

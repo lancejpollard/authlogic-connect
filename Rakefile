@@ -6,7 +6,7 @@ require 'rake/gempackagetask'
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
   s.author            = "Lance Pollard"
-  s.version           = "0.0.4.05"
+  s.version           = "0.0.4.06"
   s.summary           = "Authlogic Connect: Oauth and OpenID made dead simple"
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
   s.email             = "lancejpollard@gmail.com"
@@ -59,7 +59,7 @@ end
 
 desc "Install the gem locally"
 task :install => [:package] do
-  sh %{sudo gem install pkg/#{spec.name}-#{spec.version} --no-ri --no-rdoc}
+  sh %{gem install pkg/#{spec.name}-#{spec.version} --no-ri --no-rdoc}
 end
 
 desc "Generate the rdoc"
