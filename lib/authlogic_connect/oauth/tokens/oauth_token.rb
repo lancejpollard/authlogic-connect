@@ -17,9 +17,13 @@ class OauthToken < AccessToken
   end
   
   def get(path, options = {})
-    client.get(path)
+    client.get(path, options)
   end
-  
+
+  def post(path, body='', headers ={})
+    client.post(path, body, headers)
+  end
+
   class << self
     
     # oauth version, 1.0 or 2.0
@@ -111,7 +115,12 @@ class OauthToken < AccessToken
         return request.authorize_url
       else
         options = {:redirect_uri => callback_url}
-        options[:scope] = self.config[:scope] unless self.config[:scope].blank?
+
+        unless consumer.nil? || consumer.options.empty? || consumer.options[:scope].nil?
+          options[:scope] = consumer.options[:scope]
+        else
+          options[:scope] = self.config[:scope] unless self.config[:scope].blank?
+        end
         return consumer.web_server.authorize_url(options)
       end
     end
