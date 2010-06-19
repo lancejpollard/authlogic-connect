@@ -15,6 +15,7 @@ lib/authlogic_connect/oauth/session.rb
 lib/authlogic_connect/oauth/tokens
 lib/authlogic_connect/oauth/tokens/delicious_token.rb
 lib/authlogic_connect/oauth/tokens/facebook_token.rb
+lib/authlogic_connect/oauth/tokens/foursquare_token.rb
 lib/authlogic_connect/oauth/tokens/get_satisfaction_token.rb
 lib/authlogic_connect/oauth/tokens/google_token.rb
 lib/authlogic_connect/oauth/tokens/myspace_token.rb

@@ -41,6 +41,11 @@ AuthlogicConnect.config = {
       :secret => "my_secret",
       :label => "Facebook"
     },
+    :foursquare => {
+      :key => "my_key",
+      :secret => "my_secret",
+      :label => "Foursquare"
+    }
     :google => {
       :key => "my_key",
       :secret => "my_secret",
