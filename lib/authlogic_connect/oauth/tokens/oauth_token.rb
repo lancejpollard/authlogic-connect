@@ -51,7 +51,7 @@ class OauthToken < AccessToken
       @oauth_key
     end
     
-    def reset_consumer
+    def reset_consumer!
       if oauth_version == 1.0
         @consumer = OAuth::Consumer.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
       else
@@ -60,7 +60,7 @@ class OauthToken < AccessToken
     end
 
     def consumer
-      @consumer || reset_consumer
+      @consumer || reset_consumer!
     end
     
     # if we're lucky we can find it by the token.
