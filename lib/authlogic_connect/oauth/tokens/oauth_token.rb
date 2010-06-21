@@ -17,10 +17,12 @@ class OauthToken < AccessToken
   end
   
   def get(path, options = {})
+    path.insert(0, "/#{self.class.config[:api_version]}") unless self.class.config[:api_version].nil?
     client.get(path, options)
   end
 
   def post(path, body='', headers ={})
+    path.insert(0, "/#{self.class.config[:api_version]}") unless self.class.config[:api_version].nil?
     client.post(path, body, headers)
   end
 
