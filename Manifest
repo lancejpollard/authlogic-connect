@@ -40,7 +40,7 @@ lib/authlogic_connect/openid/tokens/openid_token.rb
 lib/authlogic_connect/openid/user.rb
 lib/authlogic_connect/openid/variables.rb
 lib/authlogic_connect/openid.rb
-lib/authlogic_connect.rb
+lib/authlogic-connect-andrewacove.rb
 lib/oauth_callback_filter.rb
 lib/token.rb
 rails/init.rb

@@ -1,4 +1,4 @@
-require "authlogic-connect"
+require "authlogic-connect-andrewacove"
 
 # copied from open_id_authentication plugin on github
 

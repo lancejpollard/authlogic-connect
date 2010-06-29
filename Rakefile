@@ -4,15 +4,14 @@ require 'rake/gempackagetask'
 
 # http://docs.rubygems.org/read/chapter/20
 spec = Gem::Specification.new do |s|
-  s.name              = "authlogic-connect"
-  s.author            = "Lance Pollard"
-  s.version           = "0.0.4.05"
-  s.summary           = "Authlogic Connect: Oauth and OpenID made dead simple"
-  s.homepage          = "http://github.com/viatropos/authlogic-connect"
-  s.email             = "lancejpollard@gmail.com"
-  s.description       = "Oauth and OpenID made dead simple"
+  s.name              = "authlogic-connect-andrewacove"
+  s.authors           = ['Lance Pollard', 'Andrew Cove']
+  s.version           = '0.5.0'
+  s.summary           = "Personal fork of Authlogic Connect: Oauth and OpenID made dead simple"
+  s.homepage          = "http://github.com/andrewacove/authlogic-connect"
+  s.email             = "andrewacove@gmail.com"
+  s.description       = "Personal additions for Oauth and OpenID made dead simple"
   s.has_rdoc          = true
-  s.rubyforge_project = "authlogic-connect"
   s.platform          = Gem::Platform::RUBY
   s.files             = %w(README.markdown Rakefile init.rb MIT-LICENSE) + Dir["{lib,rails,test}/**/*"] - Dir["test/tmp"]
   s.require_path      = "lib"
