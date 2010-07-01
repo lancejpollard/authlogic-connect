@@ -6,7 +6,7 @@ require 'rake/gempackagetask'
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect-andrewacove"
   s.authors           = ['Lance Pollard', 'Andrew Cove']
-  s.version           = '0.5.4'
+  s.version           = '0.5.5'
   s.summary           = "Personal fork of Authlogic Connect: Oauth and OpenID made dead simple"
   s.homepage          = "http://github.com/andrewacove/authlogic-connect"
   s.email             = "andrewacove@gmail.com"
