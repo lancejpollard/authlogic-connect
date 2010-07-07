@@ -1,6 +1,6 @@
 # AuthlogicConnect
 
-bq. Instant Oauth and OpenID support for your Rails and Sinatra Apps
+> Instant Oauth and OpenID support for your Rails and Sinatra Apps
 
 AuthlogicConnect is an extension of the Authlogic library that adds complete Oauth and OpenID support to your application.  It provides a single interface to Oauth 1.0 and Oauth 2.0.
 
