@@ -18,15 +18,23 @@ class OauthToken < AccessToken
   
   def get(path, options = {})
     config_options = self.class.send(:credentials)[:options]
-    api_version = config_options[:api_version] unless config_options.nil?
+    unless config_options.nil?
+      api_version = config_options[:api_version] 
+      user_agent = config_options[:user_agent]
+    end
     path.insert(0, "/#{api_version}") unless api_version.nil?
+    options.reverse_merge!("User-Agent" => user_agent) unless user_agent.nil?
     client.get(path, options)
   end
 
   def post(path, body='', headers ={})
     config_options = self.class.send(:credentials)[:options]
-    api_version = config_options[:api_version] unless config_options.nil?
+    unless config_options.nil?
+      api_version = config_options[:api_version] 
+      user_agent = config_options[:user_agent]
+    end
     path.insert(0, "/#{api_version}") unless api_version.nil?
+    headers.reverse_merge!("User-Agent" => user_agent) unless user_agent.nil?
     client.post(path, body, headers)
   end
 
