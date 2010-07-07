@@ -29,10 +29,8 @@ end
 # Rails 3beta4 backport
 if defined?(ActiveSupport::HashWithIndifferentAccess)
   ActiveSupport::HashWithIndifferentAccess.class_eval do
-    unless defined?(:symbolize_keys!)
-      def symbolize_keys!
-        symbolize_keys
-      end
+    def symbolize_keys!
+      symbolize_keys
     end
   end
 end

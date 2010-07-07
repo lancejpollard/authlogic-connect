@@ -50,8 +50,10 @@ module AuthlogicConnect::Oauth::User
     # it is called by the validation chain.
     def complete_oauth_transaction
       token = token_class.new(oauth_token_and_secret)
+      old_token = token_class.find_by_key_or_token(token.key, token.token)
+      token = old_token if old_token
       
-      if has_token?(oauth_provider) || token_class.find_by_key_or_token(token.key, token.token)
+      if has_token?(oauth_provider)
         self.errors.add(:tokens, "you have already created an account using your #{token_class.service_name} account, so it")
       else
         self.access_tokens << token
