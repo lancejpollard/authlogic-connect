@@ -1,32 +1,14 @@
 # AuthlogicConnect
 
-AuthlogicConnect is an extension of the Authlogic library that aims to add complete and seamless Oauth and OpenID support to your application.
+bq. Instant Oauth and OpenID support for your Rails and Sinatra Apps
 
-It allows you to login through any of the 30+ Oauth and OpenID providers on the Internet without having to write any of the logic yourself.
+AuthlogicConnect is an extension of the Authlogic library that adds complete Oauth and OpenID support to your application.  It provides a single interface to Oauth 1.0 and Oauth 2.0.
 
-That makes life easy and gives you a lot of power.
+It currently allows you to login with Github, Facebook, Twitter, Google, LinkedIn, MySpace, Vimeo, and Yahoo Oauth providers, and all the OpenID providers.  Feel free to add support for more as you need them.
 
 Here's a **[live example](http://authlogic-connect.heroku.com)** on Heroku ([with source](http://github.com/viatropos/authlogic-connect-example)).
 
-## Supported Providers
-
-AuthlogicConnect currently allows you to login with 7 Oauth providers and all the OpenID providers.  Feel free to add support for more as you need them.
-
-### Oauth
-
-- Twitter
-- Facebook
-- Google
-- LinkedIn
-- MySpace
-- Vimeo
-- Yahoo
-
-### OpenID
-
-- MyOpenID
-
-### Lists of all known providers here:
+### Lists of known providers:
 
 - [Oauth Providers](http://wiki.oauth.net/ServiceProviders)
 - [OpenID Providers](http://en.wikipedia.org/wiki/List_of_OpenID_providers)
