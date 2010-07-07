@@ -33,7 +33,8 @@ AuthlogicConnect.config = {
     :twitter => {
       :key => "my_key",
       :secret => "my_secret",
-      :label => "Twitter"
+      :label => "Twitter",
+      :user_agent => "Netscape"
     },
     :facebook => {
       :key => "my_key",

@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime :updated_at
   end
 
-  create_table :tokens, :force => true do |t|
+  create_table :access_tokens, :force => true do |t|
     t.integer  :user_id
     t.string   :type,       :limit => 30
     t.string   :key,        :limit => 1024

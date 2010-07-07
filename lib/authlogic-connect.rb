@@ -25,3 +25,14 @@ custom_models.each do |path|
   $LOAD_PATH << path
   ActiveSupport::Dependencies.load_paths << path
 end
+
+# Rails 3beta4 backport
+if defined?(ActiveSupport::HashWithIndifferentAccess)
+  ActiveSupport::HashWithIndifferentAccess.class_eval do
+    unless defined?(:symbolize_keys!)
+      def symbolize_keys!
+        symbolize_keys
+      end
+    end
+  end
+end

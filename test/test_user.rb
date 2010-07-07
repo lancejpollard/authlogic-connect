@@ -190,5 +190,14 @@ module AuthlogicConnect
       end
     end
     
+    context "tokens" do
+      setup do
+        @token = TwitterToken.new
+      end
+      
+      should "be version 1 since it's twitter" do
+        assert_equal 1.0, @token.oauth_version
+      end
+    end
   end
 end

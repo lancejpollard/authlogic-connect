@@ -12,6 +12,10 @@ class OauthToken < AccessToken
     @client
   end
   
+  def clear
+    @client = nil
+  end
+  
   def oauth_version
     self.class.oauth_version
   end
@@ -20,7 +24,7 @@ class OauthToken < AccessToken
     client.get(path, options)
   end
 
-  def post(path, body='', headers ={})
+  def post(path, body = "", headers = {})
     client.post(path, body, headers)
   end
 
@@ -52,15 +56,11 @@ class OauthToken < AccessToken
     end
     
     def consumer
-      unless @consumer
-        if oauth_version == 1.0
-          @consumer = OAuth::Consumer.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
-        else
-          @consumer = OAuth2::Client.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
-        end
+      if oauth_version == 1.0
+        OAuth::Consumer.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
+      else
+        OAuth2::Client.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
       end
-      
-      @consumer
     end
     
     # if we're lucky we can find it by the token.
@@ -84,7 +84,8 @@ class OauthToken < AccessToken
       redirect_uri    = options[:redirect_uri]
       token           = options[:token]
       secret          = options[:secret]
-
+      consumer        = self.consumer # cached
+      
       if oauth_version == 1.0
         access = request_token(token, secret).get_access_token(:oauth_verifier => oauth_verifier)
         result = {:token => access.token, :secret => access.secret, :key => nil}
@@ -109,8 +110,10 @@ class OauthToken < AccessToken
     # this is a cleaner method so we can access the authorize_url
     # from oauth 1 or 2
     def authorize_url(callback_url, &block)
+      consumer        = self.consumer # cached
+
       if oauth_version == 1.0
-        request = get_request_token(callback_url)
+        request = get_request_token(callback_url, consumer)
         yield request if block_given?
         return request.authorize_url
       else
@@ -131,8 +134,9 @@ class OauthToken < AccessToken
     
     # if you pass a hash as the second parameter to consumer.get_request_token,
     # ruby oauth will think this is a form and all sorts of bad things happen
-    def get_request_token(callback_url)
+    def get_request_token(callback_url, consumer = nil)
       options = {:scope => config[:scope]} if config[:scope]
+      consumer ||= self.consumer
       consumer.get_request_token({:oauth_callback => callback_url}, options)
     end
     
