@@ -6,7 +6,7 @@ AuthlogicConnect is an extension of the Authlogic library that adds complete Oau
 
 It currently allows you to login with Github, Facebook, Twitter, Google, LinkedIn, MySpace, Vimeo, and Yahoo Oauth providers, and all the OpenID providers.  Feel free to add support for more as you need them.
 
-Here's a **[live example](http://authlogic-connect.heroku.com)** on Heroku ([with source](http://github.com/viatropos/authlogic-connect-example)).
+Here's a **[live example](http://authlogic-connect.heroku.com)** on Heroku ([with source](http://github.com/viatropos/authlogic-connect-example)).  [Here's the Docs](http://rdoc.info/projects/viatropos/authlogic-connect)
 
 ### Lists of known providers:
 
@@ -228,3 +228,7 @@ Feel free to add to the wiki if you figure things out or make new distinctions.
 #### Notes
 
 - Build mechanize tool to automatically create applications with service providers.
+
+### Todo
+
+- Add [Andrew Cove's](http://github.com/andrewacove) idea of a "Merge Code".  So if user creates Facebook account logs out, and create Twitter account, a code they can use to pass to facebook account so it knows it's associated with Twitter.
