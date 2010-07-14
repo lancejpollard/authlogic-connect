@@ -21,9 +21,12 @@ custom_models =   ["#{library}/access_token"]
 custom_models +=  Dir["#{library}/oauth/tokens"]
 custom_models +=  Dir["#{library}/openid/tokens"]
 
+# Rails 3/2 config
+load_path_method = ActiveSupport::Dependencies.respond_to?(:autoload_paths) ? :autoload_paths : :load_paths
+
 custom_models.each do |path|
   $LOAD_PATH << path
-  ActiveSupport::Dependencies.load_paths << path
+  ActiveSupport::Dependencies.send(load_path_method) << path
 end
 
 # Rails 3beta4 backport

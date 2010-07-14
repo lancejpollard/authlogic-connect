@@ -17,21 +17,22 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime :created_at
     t.datetime :updated_at
   end
-
-  create_table :access_tokens, :force => true do |t|
-    t.integer  :user_id
-    t.string   :type,       :limit => 30
-    t.string   :key,        :limit => 1024
-    t.string   :secret
-    t.boolean  :active
-    t.datetime :created_at
-    t.datetime :updated_at
+  
+  create_table :access_tokens do |t|
+    t.integer :user_id
+    t.string :type, :limit => 30
+    t.string :key # how we identify the user, in case they logout and log back in
+    t.string :token, :limit => 1024 # This has to be huge because of Yahoo's excessively large tokens
+    t.string :secret
+    t.boolean :active # whether or not it's associated with the account
+    t.timestamps
   end
-
+  
   create_table :users, :force => true do |t|
     t.datetime :created_at
     t.datetime :updated_at
     t.string   :login
+    t.string   :email
     t.string   :crypted_password
     t.string   :password_salt
     t.string   :persistence_token,                :null => false
@@ -41,8 +42,6 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime :current_login_at
     t.string   :last_login_ip
     t.string   :current_login_ip
-    t.string   :openid_identifier
-    t.integer  :active_token_id
   end
 
 end

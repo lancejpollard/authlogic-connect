@@ -8,6 +8,7 @@ require "active_record"
 require "active_record/fixtures"
 require 'action_controller'
 require 'shoulda'
+require 'mocha'
 
 require File.dirname(__FILE__) + '/libs/database'
 require File.dirname(__FILE__) + '/../lib/authlogic-connect' unless defined?(AuthlogicConnect)
@@ -26,30 +27,33 @@ unless defined?(::ActiveModel)
   end
 end
 
-
 AuthlogicConnect.config = {
   :default => "twitter",
   :connect => {
     :twitter => {
       :key => "my_key",
       :secret => "my_secret",
-      :label => "Twitter",
-      :user_agent => "Netscape"
+      :headers => {
+        "User-Agent" => "Safari",
+        "MyApp-Version" => "1.2"
+      },
+      :api_version => 1
     },
     :facebook => {
       :key => "my_key",
-      :secret => "my_secret",
-      :label => "Facebook"
+      :secret => "my_secret"
+    },
+    :foursquare => {
+      :key => "my_key",
+      :secret => "my_secret"
     },
     :google => {
       :key => "my_key",
-      :secret => "my_secret",
-      :label => "Google"
+      :secret => "my_secret"
     },
     :yahoo => {
       :key => "my_key",
-      :secret => "my_secret",
-      :label => "Yahoo"
+      :secret => "my_secret"
     },
     :vimeo => {
   
@@ -98,6 +102,27 @@ class ActiveSupport::TestCase
   self.pre_loaded_fixtures = false
   fixtures :all
   setup :activate_authlogic
+  
+  def create_token
+    token = OAuth::RequestToken.new("twitter", "key", "secret")
+    token.params = {
+      :oauth_callback_confirmed => "true", 
+      :oauth_token_secret => "secret",
+      :oauth_token => "key"
+    }
+    token.consumer = OAuth::Consumer.new("key", "secret",
+      :site => "http://twitter.com",
+      :proxy => nil,
+      :oauth_version => "1.0",
+      :request_token_path => "/oauth/request_token",
+      :authorize_path => "/oauth/authorize",
+      :scheme => :header,
+      :signature_method => "HMAC-SHA1",
+      :authorize_url => "http://twitter.com/oauth/authenticate",
+      :access_token_path => "/oauth/access_token"
+    )
+    token
+  end
   
   private
     def password_for(user)

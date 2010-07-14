@@ -17,6 +17,10 @@ class AccessToken < ActiveRecord::Base
     self.class.settings
   end
   
+  def config
+    self.class.config
+  end
+  
   def get(path)
     
   end
@@ -41,6 +45,10 @@ class AccessToken < ActiveRecord::Base
     def config
       @settings ||= {}
       @settings.dup
+    end
+    
+    def api_version(value = nil)
+      config[:api]
     end
     
     protected

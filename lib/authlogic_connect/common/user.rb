@@ -60,8 +60,8 @@ module AuthlogicConnect::Common::User
       save_options = ActiveRecord::VERSION::MAJOR < 3 ? options[:validate] : options
       
       # kill the block if we're starting authentication
-      authenticate_via_protocol(block_given?, options) do |redirecting|
-        block = nil if redirecting
+      authenticate_via_protocol(block_given?, options) do |start_authentication|
+        block = nil if start_authentication # redirecting
         # forces you to validate, only if a block is given
         result = super(save_options) # validate!
         unless block.nil?

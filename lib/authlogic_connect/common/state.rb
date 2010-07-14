@@ -29,4 +29,17 @@ module AuthlogicConnect::Common::State
     !using_oauth? && super
   end
   
+  # because user and session are so closely tied together, I am still
+  # uncertain as to how they are saved.  So this makes sure if we are
+  # logging in, it must be saving the session, otherwise the user.
+  def correct_request_class?
+    return false unless auth_params?
+    
+    if is_auth_session?
+      auth_type.to_s == "session"
+    else
+      auth_type.to_s == "user"
+    end
+  end
+  
 end

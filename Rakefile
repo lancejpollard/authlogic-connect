@@ -6,7 +6,7 @@ require 'rake/gempackagetask'
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
   s.author            = "Lance Pollard"
-  s.version           = "0.0.5.1"
+  s.version           = "0.0.6"
   s.summary           = "Authlogic Connect: Oauth and OpenID made dead simple"
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
   s.email             = "lancejpollard@gmail.com"
@@ -72,4 +72,14 @@ end
 
 task :yank do
   `gem yank #{spec.name} -v #{spec.version}`
+end
+
+desc 'run unit tests'
+task :test do
+  Dir["test/**/*"].each do |file|
+    next unless File.extname(file) == ".rb"
+    next unless File.basename(file) =~ /test_/
+    next if File.basename(file) =~ /test_helper/
+    system "ruby #{file}"
+  end
 end

@@ -11,7 +11,7 @@ module AuthlogicConnect::Oauth::State
   # 2. from call
   # checks that the correct session variables are there
   def oauth_response?
-    !oauth_response.nil? && !auth_session.nil? && auth_session[:auth_request_class] == self.class.name && auth_session[:auth_method] == "oauth"
+    !oauth_response.nil? && auth_session? && auth_session[:auth_request_class] == self.class.name && auth_session[:auth_method] == "oauth"
   end
   
   def oauth_complete?
@@ -54,7 +54,7 @@ module AuthlogicConnect::Oauth::State
   end
   
   def stored_oauth_token_and_secret?
-    !is_auth_session? && auth_params && auth_params.has_key?(:_key) && auth_params.has_key?(:_token) && auth_params.has_key?(:_secret)
+    !is_auth_session? && auth_params? && auth_params.has_key?(:_key) && auth_params.has_key?(:_token) && auth_params.has_key?(:_secret)
   end
   
 end

@@ -71,5 +71,5 @@ module AuthlogicConnect::Oauth::Process
       :_secret,
     ].each {|key| remove_session_key(key)}
   end
-    
+  
 end

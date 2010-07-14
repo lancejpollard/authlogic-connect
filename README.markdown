@@ -215,7 +215,7 @@ If they've associated their Facebook account with your site, you can access Face
 
 ## Rest...
 
-Thanks for the people that are already extending the project, all the input making things move much faster.
+Thanks for the people that are already extending the project, all the input making things move much faster.  [Andrew Cove](http://github.com/andrewacove) and [Daf](http://github.com/daf) have helped me quite a bit, thanks guys.
 
 Feel free to add to the wiki if you figure things out or make new distinctions.
 

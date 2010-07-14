@@ -20,14 +20,26 @@ class OauthToken < AccessToken
     self.class.oauth_version
   end
   
-  def get(path, options = {})
-    client.get(path, options)
+  def get(path, headers = {})
+    client.get(path, headers)
   end
-
+  
   def post(path, body = "", headers = {})
     client.post(path, body, headers)
   end
-
+  
+  def head(path, headers = {})
+    client.head(path, headers)
+  end
+  
+  def put(path, body = "", headers = {})
+    client.put(path, body, headers)
+  end
+  
+  def delete(path, headers = {})
+    client.delete(path, headers)
+  end
+  
   class << self
     
     # oauth version, 1.0 or 2.0
@@ -55,11 +67,15 @@ class OauthToken < AccessToken
       @oauth_key
     end
     
+    def config
+      super.merge(credentials[:options] || {})
+    end
+
     def consumer
       if oauth_version == 1.0
-        OAuth::Consumer.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
+        OAuth::Consumer.new(credentials[:key], credentials[:secret], config)
       else
-        OAuth2::Client.new(credentials[:key], credentials[:secret], config.merge(credentials[:options] || {}))
+        OAuth2::Client.new(credentials[:key], credentials[:secret], config)
       end
     end
     
