@@ -156,7 +156,14 @@ module AuthlogicConnect
           end
         end
       end
-
+      
+      teardown do
+        @token = nil
+        @user = nil
+        controller.params.clear
+        controller.session.clear
+        Authlogic::Session::Base.controller = controller
+      end
     end
     
     context "tokens" do

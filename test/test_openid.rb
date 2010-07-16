@@ -66,6 +66,12 @@ module AuthlogicConnect
         
       end
       
+      teardown do
+        @user = nil
+        controller.params.clear
+        controller.session.clear
+        Authlogic::Session::Base.controller = controller
+      end
     end
   end
 end

@@ -5,16 +5,16 @@ require 'rake/gempackagetask'
 # http://docs.rubygems.org/read/chapter/20
 spec = Gem::Specification.new do |s|
   s.name              = "authlogic-connect"
-  s.author            = "Lance Pollard"
-  s.version           = "0.0.6"
-  s.summary           = "Authlogic Connect: Oauth and OpenID made dead simple"
+  s.version           = IO.read("VERSION")
+  s.platform          = Gem::Platform::RUBY
+  s.authors           = ["Lance Pollard"]
+  s.email             = ["lancejpollard@gmail.com"]
+  s.summary           = "Oauth and OpenID made dead simple"
+  s.description       = "Ruby Oauth and OpenID library that abstracts away all the complexities of connecting to multiple accounts."
   s.homepage          = "http://github.com/viatropos/authlogic-connect"
-  s.email             = "lancejpollard@gmail.com"
-  s.description       = "Oauth and OpenID made dead simple"
   s.has_rdoc          = true
   s.rubyforge_project = "authlogic-connect"
-  s.platform          = Gem::Platform::RUBY
-  s.files             = %w(README.markdown Rakefile init.rb MIT-LICENSE) + Dir["{lib,rails,test}/**/*"] - Dir["test/tmp"]
+  s.files             = %w(README.markdown Rakefile init.rb MIT-LICENSE VERSION) + Dir["{lib,rails}/**/*"] - Dir["test/tmp"]
   s.require_path      = "lib"
   s.add_dependency("activesupport", ">= 2.1.2")
   s.add_dependency("activerecord", ">= 2.1.2")
@@ -28,14 +28,14 @@ end
 
 desc "Create .gemspec file (useful for github)"
 task :gemspec do
-  File.open("pkg/#{spec.name}.gemspec", "w") do |f|
+  File.open("#{spec.name}.gemspec", "w") do |f|
     f.puts spec.to_ruby
   end
 end
 
 desc "Build the gem into the current directory"
 task :gem => :gemspec do
-  `gem build pkg/#{spec.name}.gemspec`
+  `gem build #{spec.name}.gemspec`
 end
 
 desc "Publish gem to rubygems"
@@ -58,7 +58,7 @@ Rake::GemPackageTask.new(spec) do |pkg|
 end
 
 desc "Install the gem locally"
-task :install => [:package] do
+task :install => [:manifest, :package] do
   sh %{gem install pkg/#{spec.name}-#{spec.version} --no-ri --no-rdoc}
 end
 
@@ -80,6 +80,6 @@ task :test do
     next unless File.extname(file) == ".rb"
     next unless File.basename(file) =~ /test_/
     next if File.basename(file) =~ /test_helper/
-    system "ruby #{file}"
+    require file
   end
 end

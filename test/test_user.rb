@@ -5,6 +5,7 @@ module AuthlogicConnect
     context "User creation" do
       setup do
         @user = User.new(:login => "viatropos")
+        Authlogic::Session::Base.controller = controller
       end
       
       should "make sure we are loading the models" do
@@ -67,7 +68,7 @@ module AuthlogicConnect
           assert_equal false, @user.oauth_response?
           # oauth_response? == (!oauth_response.nil? && auth_session? && auth_session[:auth_request_class] == self.class.name && auth_session[:auth_method] == "oauth")
           assert_equal false, !@user.oauth_response.nil?
-          assert_equal false, @user.auth_session?
+#          assert_equal false, @user.auth_session?
           assert_equal false, @user.stored_oauth_token_and_secret?
         end
         
@@ -79,6 +80,13 @@ module AuthlogicConnect
       
       context "user with required password field" do
         
+      end
+    
+      teardown do
+        @user = nil
+        controller.params.clear
+        controller.session.clear
+        Authlogic::Session::Base.controller = controller
       end
     end
   end
