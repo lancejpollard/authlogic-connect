@@ -16,6 +16,8 @@ require File.dirname(__FILE__) + '/libs/user'
 require File.dirname(__FILE__) + '/libs/user_session'
 require 'authlogic/test_case'
 
+Passport.configure("./test/config/tokens.yml")
+
 # A temporary fix to bring active record errors up to speed with rails edge.
 # I need to remove this once the new gem is released. This is only here so my tests pass.
 unless defined?(::ActiveModel)
@@ -26,40 +28,6 @@ unless defined?(::ActiveModel)
     end
   end
 end
-
-AuthlogicConnect.config = {
-  :default => "twitter",
-  :connect => {
-    :twitter => {
-      :key => "my_key",
-      :secret => "my_secret",
-      :headers => {
-        "User-Agent" => "Safari",
-        "MyApp-Version" => "1.2"
-      },
-      :api_version => 1
-    },
-    :facebook => {
-      :key => "my_key",
-      :secret => "my_secret"
-    },
-    :foursquare => {
-      :key => "my_key",
-      :secret => "my_secret"
-    },
-    :google => {
-      :key => "my_key",
-      :secret => "my_secret"
-    },
-    :yahoo => {
-      :key => "my_key",
-      :secret => "my_secret"
-    },
-    :vimeo => {
-  
-    }
-  }
-}
 
 # want to add a "method" property!
 Authlogic::TestCase::MockRequest.class_eval do

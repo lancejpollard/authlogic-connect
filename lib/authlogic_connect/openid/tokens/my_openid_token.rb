@@ -1,3 +1,0 @@
-class MyOpenidToken < OpenidToken
-  
-end

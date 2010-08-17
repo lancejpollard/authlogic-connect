@@ -1,10 +1,15 @@
 .DS_Store
+pkg
+pkg/*
 pkg/**/*
 doc/**/*
 *.tgz
 *.gem
 *.result
 *.yml
-test/config.yml
-*.gemspec
+test/config
+test/config/*
+test/config/**/*
+*/*.gemspec
+*/**/*.gemspec
 *~

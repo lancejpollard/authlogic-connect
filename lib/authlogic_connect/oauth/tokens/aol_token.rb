@@ -1,2 +1,0 @@
-# http://dev.aol.com/openauth_gettingstarted
-# https://my.screenname.aol.com/_cqr/login/login.psp?sitedomain=dev.aol.com&authLev=1&lang=en&locale=us&siteState=OrigUrl%3Dhttp%253A%252F%252Fdev.aol.com%252Fkeys

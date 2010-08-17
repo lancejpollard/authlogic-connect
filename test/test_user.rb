@@ -19,11 +19,6 @@ module AuthlogicConnect
           assert_equal [], @user.access_tokens
         end
         
-        should "have 'active_token' method" do
-          assert @user.respond_to?(:active_token)
-          assert_equal nil, @user.active_token
-        end
-        
       end
       
       context "with controller and session..." do

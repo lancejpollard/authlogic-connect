@@ -106,11 +106,13 @@ module AuthlogicConnect
             @key_and_secret = {:key => "a_key", :secret => "a_secret", :token => "a_token"}
             @user.auth_controller.params.merge!(:oauth_token => @key_and_secret[:token])
             TwitterToken.stubs(:get_token_and_secret).returns(@key_and_secret)
+            Passport::Oauth::Token
+            OAuth::RequestToken
           end
 
           should "have TwitterToken" do
             assert_equal TwitterToken, @user.token_class
-            assert 1.0, @user.token_class.oauth_version
+            assert 1.0, @user.token_class.version
           end
           
           should "have oauth token" do
@@ -123,7 +125,7 @@ module AuthlogicConnect
             assert_equal true, @user.auth_params?
             assert_equal true, @user.oauth_provider?
             assert_equal false, @user.oauth_response.blank?
-            #assert_equal false, @user.oauth_request?
+            assert_equal false, @user.oauth_request?
             # need a better way of checking this!
           end
 
@@ -172,7 +174,7 @@ module AuthlogicConnect
       end
       
       should "be version 1 since it's twitter" do
-        assert_equal 1.0, @token.oauth_version
+        assert_equal 1.0, @token.version
       end
       
       should "return a new consumer with each call" do
