@@ -41,6 +41,7 @@ module AuthlogicConnect::Oauth
           hash = oauth_token_and_secret
           token = token_class.find_by_key_or_token(hash[:key], hash[:token], :include => [:user]) # some weird error if I leave out the include)
           if token
+            token.update_attributes(:key => hash[:key], :token => hash[:token], :secret => hash[:secret])
             self.attempted_record = token.user
           elsif auto_register?
             self.attempted_record = klass.new

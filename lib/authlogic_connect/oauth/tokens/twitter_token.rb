@@ -2,7 +2,7 @@ class TwitterToken < OauthToken
   
   key :user_id
   
-  settings "http://api.twitter.com",
-    :authorize_url => "http://api.twitter.com/oauth/authenticate"
+  settings "https://api.twitter.com",
+    :authorize_url => "https://api.twitter.com/oauth/authenticate"
   
 end
