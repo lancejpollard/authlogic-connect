@@ -44,7 +44,7 @@ module AuthlogicConnect::Oauth
             token.update_attributes(:key => hash[:key], :token => hash[:token], :secret => hash[:secret])
             self.attempted_record = token.user
             self.attempted_record.oauth_login_callback(false) if self.attempted_record.respond_to?(:oauth_login_callback)
-            self.attempted_record.save if user.changed?
+            self.attempted_record.save if self.attempted_record.changed?
           elsif auto_register?
             self.attempted_record = klass.new
             self.attempted_record.access_tokens << token_class.new(hash)
