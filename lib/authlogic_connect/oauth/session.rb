@@ -43,10 +43,12 @@ module AuthlogicConnect::Oauth
           if token
             token.update_attributes(:key => hash[:key], :token => hash[:token], :secret => hash[:secret])
             self.attempted_record = token.user
+            self.attempted_record.oauth_login_callback(true) if self.attempted_record.respond_to?(:oauth_login_callback)
+            self.attempted_record.save if user.changed?
           elsif auto_register?
             self.attempted_record = klass.new
             self.attempted_record.access_tokens << token_class.new(hash)
-            self.attempted_record.map_oauth_data(hash) if self.attempted_record.respond_to?(:map_oauth_data)
+            self.attempted_record.oauth_login_callback(true) if self.attempted_record.respond_to?(:oauth_login_callback)
             self.attempted_record.save
           else
             auth_session[:_key] = hash[:key]
