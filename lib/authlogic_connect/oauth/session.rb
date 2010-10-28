@@ -58,18 +58,18 @@ module AuthlogicConnect::Oauth
               self.attempted_record.active_token = self.attempted_record.get_token(:facebook)
               facebook = JSON.parse(self.attempted_record.active_token.get("/me"))
               puts "//////////////   FACEBOOK DETAILS #{facebook.inspect}"
-              puts "//////////////   FACEBOOK EMAIL #{facebook[:email]}"
-              
-              if facebook["email"]
-                existing_user = klass.find_by_email(facebook["email"])
+              puts "//////////////   FACEBOOK EMAIL #{facebook[:email]}"  
+              if facebook[:email]
+                existing_user = klass.find_by_email(facebook[:email])
                 puts "//////////////   FACEBOOK DETAILS YES YES YES YES #{existing_user} #{existing_user.inspect}"
                 if existing_user
-                  self.attempted_record = existing_user
+                  # It would be nice to place this app specific code somewhere else
+                  self.attempted_record            = existing_user
                   self.attempted_record.access_tokens << token_class.new(hash)                  
-                  puts "/////////   FACEBOOK HOLY SHIT IT's WORKING BEeeeeACH"
                 end
               end
-              
+              self.attempted_record.first_name = facebook[:first_name] if !facebook[:first_name].nil? and !self.attempted_record.first_name.nil?
+              self.attempted_record.last_name  = facebook[:last_name] if !facebook[:last_name].nil? and !self.attempted_record.last_name.nil?              
             end
             
             

@@ -13,8 +13,10 @@ module AuthlogicConnect::Oauth::Process
   def start_oauth
     save_oauth_session
     authorize_url = token_class.authorize_url(auth_callback_url) do |request_token|
+      request_token.display = "popup"
       save_auth_session_token(request_token) # only for oauth version 1
     end
+    puts "4 AAAAAAAAAA -----------------   authorize_url #{authorize_url}"
     auth_controller.redirect_to authorize_url
   end
   
