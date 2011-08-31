@@ -70,7 +70,7 @@ module AuthlogicConnect::Common::Variables
   
   # returns boolean
   def authentication_protocol(with, phase)
-    returning(send("#{phase.to_s}_#{with.to_s}?")) do |ready|
+    send("#{phase.to_s}_#{with.to_s}?").tap do |ready|
       send("#{phase.to_s}_#{with.to_s}") if ready
     end if send("using_#{with.to_s}?")
   end
