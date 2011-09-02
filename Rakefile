@@ -1,6 +1,6 @@
 require 'rake'
-require "rake/rdoctask"
-require 'rake/gempackagetask'
+require "rdoc/task"
+require 'rubygems/package_task'
 
 # http://docs.rubygems.org/read/chapter/20
 spec = Gem::Specification.new do |s|
@@ -52,7 +52,7 @@ task :manifest do
   end
 end
 
-Rake::GemPackageTask.new(spec) do |pkg|
+Gem::PackageTask.new(spec) do |pkg|
   pkg.gem_spec    = spec
   pkg.package_dir = "pkg"
 end

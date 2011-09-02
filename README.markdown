@@ -114,6 +114,8 @@ Because of the redirects involved in Oauth and OpenID, you MUST pass a block to 
     end
 
 If you don't use the block, we will get a DoubleRender error.  We need the block to jump out of the rendering while redirecting.
+
+Also, be sure to skip protect_from_forgery for actions using this. Even if logs say a GET request is issued, a POST route will need to bypass forgery protection in order to yield a result to the #save block when back from auth provider.
   
 ### 7. Add Parameters to Forms in your Views
 
